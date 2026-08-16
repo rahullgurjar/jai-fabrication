@@ -14,11 +14,11 @@ export const siteAssets: {
   hero: AssetBinding;
   floralTote: AssetBinding;
   patchworkDuffle: AssetBinding;
-  indigoPouch: AssetBinding;
+  yellowPouch: AssetBinding;
 } = {
   logo: logoAsset.url,
   hero: heroAsset.url,
   floralTote: floralToteAsset.url,
   patchworkDuffle: patchworkDuffleAsset.url,
-  indigoPouch: quiltedPouchAsset.url,
+  yellowPouch: quiltedPouchAsset.url,
 };

@@ -43,11 +43,11 @@ const PRODUCTS = [
     placeholder: "Patchwork Duffle — product image",
   },
   {
-    name: "Indigo Quilted Pouch",
+    name: "Yellow Quilted Pouch",
     price: "₹699",
-    asset: siteAssets.indigoPouch,
-    note: "Quilted indigo cotton, hand-finished zip pouch.",
-    placeholder: "Indigo Pouch — product image",
+    asset: siteAssets.yellowPouch,
+    note: "Quilted yellow cotton, hand-finished zip pouch.",
+    placeholder: "Yellow Quilted Pouch — product image",
   },
 ];
 
