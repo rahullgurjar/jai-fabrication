@@ -601,18 +601,17 @@ function Index() {
                   WhatsApp +91 9521922366
                 </a>
               </li>
-              <li>
-                <a
-                  href="https://instagram.com/jaifabrication"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 text-muted-foreground transition-colors hover:text-terracotta"
-                >
-                  <Instagram className="h-4 w-4 text-terracotta" aria-hidden="true" />
-                  Instagram @jaifabrication
-                </a>
-              </li>
             </ul>
+            <a
+              href="https://instagram.com/jaifabrication"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow Jai Fabrication on Instagram (opens in a new tab)"
+              className="mt-6 inline-flex items-center gap-3 border border-maroon/25 bg-secondary px-5 py-3 font-medium text-maroon transition-colors hover:bg-terracotta hover:text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+            >
+              <Instagram className="h-5 w-5" aria-hidden="true" />
+              Follow @jaifabrication
+            </a>
             <p className="mt-6 text-sm text-muted-foreground">
               Worldwide shipping. Defective items can be reported within 3 days
               of delivery.
