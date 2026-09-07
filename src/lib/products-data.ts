@@ -56,10 +56,10 @@ export interface Product {
 
 export const CATEGORIES = [
   { id: "all", label: "All Creations" },
-  { id: "tech", label: "Laptop Sleeves" },
   { id: "duffles", label: "Duffle & Travel" },
+  { id: "tech", label: "Laptop Sleeves" },
   { id: "pouches", label: "Pouches & Vanity" },
-  { id: "yoga", label: "Yoga & Wellness" },
+  { id: "yoga", label: "Yoga & Active" },
   { id: "totes", label: "Totes & Shoppers" },
   { id: "gifting", label: "Sets & Favours" },
 ] as const;
@@ -78,7 +78,7 @@ export const PRODUCTS_DATA: Product[] = [
     shortDescription: "Quilted Jaipur floral cotton with mustard ruffle trims, front bow-tie closure and scrunchie carry strap.",
     fullDescription:
       "A charming marriage of vintage femininity and modern utility. Handcrafted in 100% pure quilted cotton with shock-absorbing foam padding to keep your MacBook or laptop protected. Features contrast mustard yellow block-print ruffle borders, an adjustable front bow tie, and a matching ruched scrunchie shoulder strap.",
-    dimensions: "Fits 13\" to 14\" Laptops / MacBooks (14\" W x 10.5\" H x 1.2\" D)",
+    dimensions: "Fits 13\" to 14.2\" Laptops / MacBooks (14\" W x 10.5\" H x 1.2\" D)",
     material: "100% Pure Cotton Voile exterior, quilted foam padding, soft cotton lining",
     craft: "Sanganeri hand-block floral repeat with artisan ruffle frill detailing",
     closure: "Protective flap with dual cotton tie-up ribbons",
@@ -90,6 +90,28 @@ export const PRODUCTS_DATA: Product[] = [
   },
 
   // 2. Duffles & Travel
+  {
+    id: "pink-lemon-stripe-travel-tote",
+    name: "Pink Lemon Stripe Quilted Travel Holdall",
+    category: "duffles",
+    categoryLabel: "Duffle & Travel",
+    price: 1749,
+    formattedPrice: "₹1,749",
+    asset: siteAssets.pinkLemonStripeTravelTote,
+    placeholder: "Pink Lemon Stripe Travel Holdall — product image",
+    shortDescription: "Candy-stripe pink channel quilting with sunny yellow lemon motifs, deep front pocket and long shoulder straps.",
+    fullDescription:
+      "Bright, playful, and crafted for wanderlust. High-density channel quilting in candy-pink and white vertical stripes, overlaid with hand-block printed Meyer lemon bootahs. Long comfortable shoulder straps allow easy carrying over coats and jackets.",
+    dimensions: "20\" L x 11\" H x 9\" D (Handle Drop: 11.5\")",
+    material: "100% Heavyweight Cotton Canvas with soft channel padding",
+    craft: "Two-register hand woodblock printing & vertical channel quilting",
+    closure: "Smooth full-width top zipper with reinforced pull tab",
+    pockets: "1 Deep front slip pocket + 1 internal zippered compartment",
+    washCare: "Spot clean with mild detergent or gentle cold hand wash.",
+    tags: ["100% Cotton", "Candy Stripe", "Bestseller", "Vacation Holdall"],
+    isBestseller: true,
+    isNew: true,
+  },
   {
     id: "dusty-rose-floral-duffle",
     name: "Dusty Rose Floral Quilted Weekend Duffle",
@@ -177,6 +199,28 @@ export const PRODUCTS_DATA: Product[] = [
 
   // 3. Pouches & Vanity
   {
+    id: "blue-mughal-vanity-box",
+    name: "Blue Mughal Flora Quilted Vanity Train Case",
+    category: "pouches",
+    categoryLabel: "Pouches & Vanity",
+    price: 899,
+    formattedPrice: "₹899",
+    asset: siteAssets.blueMughalVanityBox,
+    placeholder: "Blue Mughal Vanity Box — product image",
+    shortDescription: "Structured box silhouette with top carry handle, azure floral bootahs and wipe-clean interior lining.",
+    fullDescription:
+      "Designed for skincare connoisseurs and dressing tables. Stands upright with a rigid base to prevent cosmetics from toppling over. The full zip-around lid provides a bird's-eye view of your beauty collection, while the wipe-clean barrier guards against accidental spills.",
+    dimensions: "9.5\" W x 6\" H x 5.5\" D (Top Handle Drop: 3\")",
+    material: "100% Pure Quilted Cotton with waterproof PVC wipe-clean interior",
+    craft: "Mughal garden woodblock repeat & box-structure tailoring",
+    closure: "Two-way wrap-around brass zipper",
+    pockets: "Wide cavity + inner elasticized cosmetic brush bands",
+    washCare: "Wipe interior with damp cloth; hand wash exterior.",
+    tags: ["Top Handle", "Wipe-Clean Lining", "Bestseller", "Train Case"],
+    isBestseller: true,
+    isNew: true,
+  },
+  {
     id: "lavender-quilted-vanity-pouch",
     name: "Lavender Bloom Triangular Vanity Case",
     category: "pouches",
@@ -262,12 +306,33 @@ export const PRODUCTS_DATA: Product[] = [
     isBestseller: true,
   },
 
-  // 4. Yoga & Wellness
+  // 4. Yoga & Active
+  {
+    id: "peach-sanganeri-yoga-mat-bag",
+    name: "Peach Blossom Sanganeri Yoga Mat Carrier",
+    category: "yoga",
+    categoryLabel: "Yoga & Active",
+    price: 1449,
+    formattedPrice: "₹1,449",
+    asset: siteAssets.peachSanganeriYogaMatBag,
+    placeholder: "Peach Sanganeri Yoga Mat Bag — product image",
+    shortDescription: "Pastel peach and sage floral geometric print with full zipper and striped shoulder strap.",
+    fullDescription:
+      "An uplifting, lightweight yoga mat bag for morning sadhana and studio sessions. Features full-length heavy-duty brass zipper for effortless mat insertion, breathable 100% cotton fabric, and an adjustable pink candy-striped shoulder strap.",
+    dimensions: "28\" Length x 6.5\" Diameter (Fits 2mm to 8mm mats)",
+    material: "100% Heavy Pure Cotton Canvas with quilted interlining",
+    craft: "Sanganeri geometric floral block print & channel stitch",
+    closure: "Full-length side zipper with dual brass pullers",
+    pockets: "External zip key pocket + phone slip slot",
+    washCare: "Gentle cold hand wash or machine wash gentle. Air dry.",
+    tags: ["Fits Thick Mats", "100% Cotton", "New Arrival"],
+    isNew: true,
+  },
   {
     id: "tropical-safari-yoga-mat-bag",
     name: "Azure Safari Quilted Yoga Mat Carrier Bag",
     category: "yoga",
-    categoryLabel: "Yoga & Wellness",
+    categoryLabel: "Yoga & Active",
     price: 1499,
     formattedPrice: "₹1,499",
     asset: siteAssets.tropicalSafariYogaMatBag,
@@ -310,6 +375,28 @@ export const PRODUCTS_DATA: Product[] = [
   },
 
   // 6. Gifting & Sets
+  {
+    id: "peach-pleated-clutch-trio",
+    name: "3-Piece Peach Pleated Cosmetic Clutch Nest",
+    category: "gifting",
+    categoryLabel: "Sets & Favours",
+    price: 1349,
+    formattedPrice: "₹1,349",
+    asset: siteAssets.peachPleatedClutchTrio,
+    placeholder: "Peach Pleated Clutch Trio — product image",
+    shortDescription: "Curated set of 3 pleated channel-quilted clutches with handcrafted beaded tassels.",
+    fullDescription:
+      "A stunning trio of pleated cosmetic pouches in graduating sizes. Hand-block printed on soft peach cotton with botanical leaves. Each pouch features artisanal channel tuck pleating and is finished with hand-strung glass beaded tassels on the zipper pulls.",
+    dimensions: "Small: 6.5\"x4.5\" | Medium: 8.5\"x6\" | Large: 10.5\"x7.5\"",
+    material: "100% Pure Quilted Cotton with handcrafted tuck pleating",
+    craft: "Tuck-pleat tailoring & block printing with beaded pull tassels",
+    closure: "Smooth metal zippers with beaded tassel pulls",
+    pockets: "Three discrete pouch organizer cavities",
+    washCare: "Spot clean or gentle cold hand wash.",
+    tags: ["Set of 3", "Beaded Tassels", "Gifting Favourite", "New Arrival"],
+    isNew: true,
+    isBestseller: true,
+  },
   {
     id: "nesting-pouch-set-3pc",
     name: "3-Piece Gifting Nest Pouch Set",

@@ -27,11 +27,13 @@ import {
 } from "@/components/ui/accordion";
 import { useCart, WA_BASE_PHONE } from "@/lib/cart-context";
 import { PRODUCTS_DATA, CATEGORIES, Product, calculateTierPrice } from "@/lib/products-data";
+import { getProductReviewsAndQA } from "@/lib/product-reviews";
 import { CartDrawer } from "@/components/CartDrawer";
 import { QuickViewModal } from "@/components/QuickViewModal";
 import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
 import { CraftLookbook } from "@/components/CraftLookbook";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
+import { ArtisanChatBot } from "@/components/ArtisanChatBot";
 
 const WA_BASE = `https://wa.me/${WA_BASE_PHONE}`;
 const wa = (message: string) => `${WA_BASE}?text=${encodeURIComponent(message)}`;
@@ -193,13 +195,14 @@ function Index() {
         Skip to content
       </a>
 
-      {/* Cart Drawer & Quick View Modal */}
+      {/* Cart Drawer, Quick View Modal & AI Chatbot */}
       <CartDrawer />
       <QuickViewModal
         product={quickViewProduct}
         isOpen={!!quickViewProduct}
         onClose={() => setQuickViewProduct(null)}
       />
+      <ArtisanChatBot />
 
       {/* Top Banner Notice */}
       <div className="bg-maroon px-4 py-2 text-center text-[0.68rem] uppercase tracking-[0.22em] text-ivory/95 font-medium border-b border-maroon/30">
@@ -783,6 +786,7 @@ function ProductCard({
   const { addToCart } = useCart();
   const [selectedQty, setSelectedQty] = useState(1);
   const tier = calculateTierPrice(product.price, selectedQty);
+  const reviewData = getProductReviewsAndQA(product.id);
 
   return (
     <li className="group flex flex-col justify-between rounded-sm border border-border/70 bg-card p-4 transition-all duration-300 hover:border-terracotta/50 hover:shadow-[var(--shadow-soft)]">
@@ -820,25 +824,37 @@ function ProductCard({
               className="inline-flex items-center gap-2 bg-ivory px-4 py-2 text-[0.7rem] uppercase tracking-widest text-maroon font-bold shadow-lg transition-transform hover:scale-105"
             >
               <Eye className="h-3.5 w-3.5" />
-              Specs &amp; Bulk Tiers
+              Specs, Reviews &amp; Bulk
             </button>
           </div>
         </div>
 
-        {/* Tags */}
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {product.tags.slice(0, 2).map((label) => (
-            <span
-              key={label}
-              className="border border-maroon/25 px-2.5 py-0.5 text-[0.6rem] uppercase tracking-[0.18em] text-maroon/80 font-medium"
-            >
-              {label}
-            </span>
-          ))}
+        {/* Tags & Rating Header */}
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-1.5">
+            {product.tags.slice(0, 2).map((label) => (
+              <span
+                key={label}
+                className="border border-maroon/25 px-2 py-0.5 text-[0.58rem] uppercase tracking-[0.16em] text-maroon/80 font-medium"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => onOpenQuickView(product)}
+            className="inline-flex items-center gap-1 text-[0.68rem] text-terracotta hover:underline font-semibold"
+            title={`${reviewData.reviewCount} customer reviews`}
+          >
+            <span className="text-amber-500 font-bold">★</span>
+            <span className="font-bold text-foreground">{reviewData.rating}</span>
+            <span className="text-muted-foreground text-[0.62rem]">({reviewData.reviewCount})</span>
+          </button>
         </div>
 
         {/* Title & Short Description */}
-        <h3 className="mt-3 font-serif text-2xl text-maroon font-medium group-hover:text-terracotta transition-colors">
+        <h3 className="mt-2.5 font-serif text-2xl text-maroon font-medium group-hover:text-terracotta transition-colors">
           {product.name}
         </h3>
         <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">

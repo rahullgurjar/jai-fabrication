@@ -15,6 +15,10 @@ import lavenderVanityPouchAsset from "@/assets/lavender-quilted-vanity-pouch.jpe
 import limeFloralPouchAsset from "@/assets/lime-floral-quilted-pouch.jpeg";
 import tropicalSafariYogaMatBagAsset from "@/assets/tropical-safari-yoga-mat-bag.jpeg";
 import pinkStripeClutchAsset from "@/assets/pink-stripe-quilted-clutch.jpeg";
+import peachSanganeriYogaMatBagAsset from "@/assets/peach-sanganeri-yoga-mat-bag.jpeg";
+import blueMughalVanityBoxAsset from "@/assets/blue-mughal-vanity-box.jpeg";
+import peachPleatedClutchTrioAsset from "@/assets/peach-pleated-clutch-trio.jpeg";
+import pinkLemonStripeTravelToteAsset from "@/assets/pink-lemon-stripe-travel-tote.jpeg";
 
 export type AssetBinding = string | null;
 
@@ -33,6 +37,10 @@ export const siteAssets: {
   limeFloralPouch: AssetBinding;
   tropicalSafariYogaMatBag: AssetBinding;
   pinkStripeClutch: AssetBinding;
+  peachSanganeriYogaMatBag: AssetBinding;
+  blueMughalVanityBox: AssetBinding;
+  peachPleatedClutchTrio: AssetBinding;
+  pinkLemonStripeTravelTote: AssetBinding;
 } = {
   logo: logoAsset,
   hero: heroAsset,
@@ -48,4 +56,8 @@ export const siteAssets: {
   limeFloralPouch: limeFloralPouchAsset,
   tropicalSafariYogaMatBag: tropicalSafariYogaMatBagAsset,
   pinkStripeClutch: pinkStripeClutchAsset,
+  peachSanganeriYogaMatBag: peachSanganeriYogaMatBagAsset,
+  blueMughalVanityBox: blueMughalVanityBoxAsset,
+  peachPleatedClutchTrio: peachPleatedClutchTrioAsset,
+  pinkLemonStripeTravelTote: pinkLemonStripeTravelToteAsset,
 };
