@@ -34,6 +34,7 @@ import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
 import { CraftLookbook } from "@/components/CraftLookbook";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ArtisanChatBot } from "@/components/ArtisanChatBot";
+import { CraftVideoShowcase } from "@/components/CraftVideoShowcase";
 
 const WA_BASE = `https://wa.me/${WA_BASE_PHONE}`;
 const wa = (message: string) => `${WA_BASE}?text=${encodeURIComponent(message)}`;
@@ -45,6 +46,7 @@ const CUSTOM_WA = wa(
 const NAV = [
   { label: "Shop", href: "#shop" },
   { label: "Our Craft", href: "#craft" },
+  { label: "Workshop Reels", href: "#craft-videos" },
   { label: "Custom Orders", href: "#custom" },
   { label: "Lookbook", href: "#lookbook" },
   { label: "Reviews", href: "#testimonials" },
@@ -612,6 +614,9 @@ function Index() {
 
         {/* Craft Lookbook */}
         <CraftLookbook />
+
+        {/* Workshop Video & Motion Visuals Showcase */}
+        <CraftVideoShowcase />
 
         {/* Testimonials & Trust Credentials */}
         <TestimonialsSection />
