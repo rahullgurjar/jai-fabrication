@@ -1,9 +1,41 @@
 import { siteAssets } from "./site-assets";
 
+export interface BulkTier {
+  qty: number;
+  label: string;
+  discountPercent: number;
+  tag?: string;
+}
+
+export const BULK_TIERS: BulkTier[] = [
+  { qty: 1, label: "1 pc (Sample)", discountPercent: 0 },
+  { qty: 10, label: "10 pcs", discountPercent: 5, tag: "5% OFF" },
+  { qty: 25, label: "25 pcs (Weddings)", discountPercent: 10, tag: "10% OFF" },
+  { qty: 50, label: "50 pcs (Events)", discountPercent: 15, tag: "15% OFF" },
+  { qty: 100, label: "100 pcs (Wholesale)", discountPercent: 20, tag: "20% OFF" },
+];
+
+export function calculateTierPrice(baseUnitPrice: number, qty: number) {
+  let discount = 0;
+  if (qty >= 100) discount = 0.20;
+  else if (qty >= 50) discount = 0.15;
+  else if (qty >= 25) discount = 0.10;
+  else if (qty >= 10) discount = 0.05;
+
+  const discountedUnit = Math.round(baseUnitPrice * (1 - discount));
+  const total = discountedUnit * qty;
+  return {
+    discountPercent: Math.round(discount * 100),
+    unitPrice: discountedUnit,
+    totalPrice: total,
+    savings: baseUnitPrice * qty - total,
+  };
+}
+
 export interface Product {
   id: string;
   name: string;
-  category: "totes" | "duffles" | "pouches" | "tech" | "yoga" | "gifting";
+  category: "all" | "tech" | "duffles" | "pouches" | "yoga" | "totes" | "gifting";
   categoryLabel: string;
   price: number;
   formattedPrice: string;
@@ -24,12 +56,12 @@ export interface Product {
 
 export const CATEGORIES = [
   { id: "all", label: "All Creations" },
-  { id: "duffles", label: "Duffle & Travel" },
   { id: "tech", label: "Laptop Sleeves" },
+  { id: "duffles", label: "Duffle & Travel" },
   { id: "pouches", label: "Pouches & Vanity" },
   { id: "yoga", label: "Yoga & Wellness" },
   { id: "totes", label: "Totes & Shoppers" },
-  { id: "gifting", label: "Favours & Sets" },
+  { id: "gifting", label: "Sets & Favours" },
 ] as const;
 
 export const PRODUCTS_DATA: Product[] = [
@@ -277,12 +309,12 @@ export const PRODUCTS_DATA: Product[] = [
     isBestseller: true,
   },
 
-  // 6. Gifting & Bulk Favours
+  // 6. Gifting & Sets
   {
     id: "nesting-pouch-set-3pc",
     name: "3-Piece Gifting Nest Pouch Set",
     category: "gifting",
-    categoryLabel: "Favours & Sets",
+    categoryLabel: "Sets & Favours",
     price: 1299,
     formattedPrice: "₹1,299",
     asset: siteAssets.yellowPouch,
@@ -298,25 +330,5 @@ export const PRODUCTS_DATA: Product[] = [
     washCare: "Gentle cold hand wash.",
     tags: ["Gift Boxed", "Set of 3", "Best Value"],
     isBestseller: true,
-  },
-  {
-    id: "wedding-favor-hamper-set",
-    name: "Mehendi Wedding Favor Bag Bundle (10 pcs)",
-    category: "gifting",
-    categoryLabel: "Favours & Sets",
-    price: 4999,
-    formattedPrice: "₹4,999",
-    asset: siteAssets.floralTote,
-    placeholder: "Wedding Favor Set — product image",
-    shortDescription: "Pack of 10 customized block-print gift tote bags for weddings & events.",
-    fullDescription:
-      "Delight your wedding and celebration guests with authentic Jaipur handmade cotton tote bags. Includes custom couple monogram hangtags and customizable colour combinations upon request.",
-    dimensions: "12\" H x 11\" W (Set of 10 Bags)",
-    material: "100% Cotton Sheeting Fabric (200 GSM)",
-    craft: "Customizable hand block printing (Sanganer / Bagru style)",
-    closure: "Open top with cotton tape handles",
-    pockets: "Single main open cavity",
-    washCare: "Hand wash cold, air dry.",
-    tags: ["Bulk Bundle", "Customizable", "Wedding Favours"],
   },
 ];

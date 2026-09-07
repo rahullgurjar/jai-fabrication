@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageCircle, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Sparkles } from "lucide-react";
+import { MessageCircle, Trash2, Plus, Minus, ShoppingBag, ArrowRight, Sparkles, Tag, TrendingDown } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -8,7 +8,7 @@ import {
   SheetDescription,
 } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart-context";
-import { PRODUCTS_DATA } from "@/lib/products-data";
+import { PRODUCTS_DATA, calculateTierPrice } from "@/lib/products-data";
 import { AssetImage } from "@/components/AssetImage";
 
 export function CartDrawer() {
@@ -16,6 +16,7 @@ export function CartDrawer() {
     items,
     totalItems,
     totalPrice,
+    totalSavings,
     isCartOpen,
     setIsCartOpen,
     updateQuantity,
@@ -55,7 +56,7 @@ export function CartDrawer() {
             )}
           </div>
           <SheetDescription className="text-xs text-muted-foreground">
-            Review your selected handmade pieces and send an instant order enquiry to our Jaipur workshop.
+            Single pieces and bulk batches (10 to 100+ pcs) with direct Jaipur artisan pricing.
           </SheetDescription>
         </SheetHeader>
 
@@ -68,7 +69,7 @@ export function CartDrawer() {
               </div>
               <p className="font-serif text-xl text-maroon">Your bag is empty</p>
               <p className="mt-1.5 max-w-xs text-xs text-muted-foreground leading-relaxed">
-                Explore our curated hand-block printed cotton bags and pouches to begin your enquiry.
+                Explore our curated hand-block printed cotton creations to begin your order inquiry.
               </p>
 
               {/* Quick suggestions */}
@@ -104,7 +105,7 @@ export function CartDrawer() {
                         onClick={() => addToCart(product, 1)}
                         className="shrink-0 bg-maroon px-3 py-1.5 text-[0.65rem] uppercase tracking-wider text-ivory transition-colors hover:bg-terracotta"
                       >
-                        Add
+                        Add 1 pc
                       </button>
                     </div>
                   ))}
@@ -114,72 +115,110 @@ export function CartDrawer() {
           ) : (
             <div className="space-y-4">
               <ul className="divide-y divide-border/60">
-                {items.map(({ product, quantity }) => (
-                  <li key={product.id} className="py-4 first:pt-0 last:pb-0">
-                    <div className="flex gap-3.5">
-                      {/* Product Thumbnail */}
-                      <div className="h-20 w-16 shrink-0 overflow-hidden rounded-sm bg-secondary border border-border/60">
-                        <AssetImage
-                          src={product.asset}
-                          alt={product.name}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
+                {items.map(({ product, quantity }) => {
+                  const tier = calculateTierPrice(product.price, quantity);
 
-                      {/* Product Details */}
-                      <div className="flex flex-1 flex-col justify-between">
-                        <div>
-                          <div className="flex items-start justify-between gap-2">
-                            <h4 className="font-serif text-base text-maroon leading-tight">
-                              {product.name}
-                            </h4>
-                            <button
-                              type="button"
-                              onClick={() => removeFromCart(product.id)}
-                              className="text-muted-foreground hover:text-destructive transition-colors p-1"
-                              aria-label={`Remove ${product.name} from bag`}
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                          <p className="text-[0.68rem] text-muted-foreground mt-0.5">
-                            {product.categoryLabel} · 100% Cotton
-                          </p>
+                  return (
+                    <li key={product.id} className="py-4 first:pt-0 last:pb-0">
+                      <div className="flex gap-3.5">
+                        {/* Product Thumbnail */}
+                        <div className="h-20 w-16 shrink-0 overflow-hidden rounded-sm bg-secondary border border-border/60">
+                          <AssetImage
+                            src={product.asset}
+                            alt={product.name}
+                            className="h-full w-full object-cover"
+                          />
                         </div>
 
-                        <div className="flex items-center justify-between pt-2">
-                          {/* Quantity Controls */}
-                          <div className="flex items-center border border-border/80 rounded-sm bg-background">
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(product.id, quantity - 1)}
-                              className="p-1.5 text-muted-foreground hover:text-maroon transition-colors"
-                              aria-label="Decrease quantity"
-                            >
-                              <Minus className="h-3 w-3" />
-                            </button>
-                            <span className="w-7 text-center text-xs font-semibold text-foreground">
-                              {quantity}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(product.id, quantity + 1)}
-                              className="p-1.5 text-muted-foreground hover:text-maroon transition-colors"
-                              aria-label="Increase quantity"
-                            >
-                              <Plus className="h-3 w-3" />
-                            </button>
+                        {/* Product Details */}
+                        <div className="flex flex-1 flex-col justify-between">
+                          <div>
+                            <div className="flex items-start justify-between gap-2">
+                              <h4 className="font-serif text-base text-maroon leading-tight">
+                                {product.name}
+                              </h4>
+                              <button
+                                type="button"
+                                onClick={() => removeFromCart(product.id)}
+                                className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                                aria-label={`Remove ${product.name} from bag`}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="text-[0.68rem] text-muted-foreground">
+                                ₹{tier.unitPrice.toLocaleString("en-IN")}/pc
+                              </p>
+                              {tier.discountPercent > 0 && (
+                                <span className="bg-terracotta/10 text-terracotta text-[0.6rem] font-bold px-1.5 py-0.2 rounded-xs">
+                                  {tier.discountPercent}% OFF
+                                </span>
+                              )}
+                            </div>
                           </div>
 
-                          {/* Line Price */}
-                          <p className="text-sm font-medium text-foreground">
-                            ₹{(product.price * quantity).toLocaleString("en-IN")}
-                          </p>
+                          <div className="flex items-center justify-between pt-2">
+                            {/* Quantity Controls */}
+                            <div className="flex items-center border border-border/80 rounded-sm bg-background">
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(product.id, quantity - 1)}
+                                className="p-1.5 text-muted-foreground hover:text-maroon transition-colors"
+                                aria-label="Decrease quantity"
+                              >
+                                <Minus className="h-3 w-3" />
+                              </button>
+                              <input
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value, 10);
+                                  if (!isNaN(val)) {
+                                    updateQuantity(product.id, val);
+                                  }
+                                }}
+                                className="w-10 text-center text-xs font-semibold text-foreground focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(product.id, quantity + 1)}
+                                className="p-1.5 text-muted-foreground hover:text-maroon transition-colors"
+                                aria-label="Increase quantity"
+                              >
+                                <Plus className="h-3 w-3" />
+                              </button>
+                            </div>
+
+                            {/* Quick Bulk Presets */}
+                            <div className="flex gap-1">
+                              {[10, 25, 50, 100].map((preset) => (
+                                <button
+                                  key={preset}
+                                  type="button"
+                                  onClick={() => updateQuantity(product.id, preset)}
+                                  className={`text-[0.6rem] px-1.5 py-0.5 rounded-xs border transition-colors ${
+                                    quantity === preset
+                                      ? "bg-maroon text-ivory border-maroon font-bold"
+                                      : "bg-secondary text-muted-foreground border-border hover:text-maroon"
+                                  }`}
+                                >
+                                  {preset}
+                                </button>
+                              ))}
+                            </div>
+
+                            {/* Line Price */}
+                            <p className="text-sm font-medium text-foreground">
+                              ₹{tier.totalPrice.toLocaleString("en-IN")}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
 
               {/* Special Note */}
@@ -188,22 +227,24 @@ export function CartDrawer() {
                   htmlFor="custom-note"
                   className="block text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground font-medium mb-1.5"
                 >
-                  Custom Notes / Delivery Timeline (Optional)
+                  Custom Notes / Bulk Requirements (Optional)
                 </label>
                 <textarea
                   id="custom-note"
                   rows={2}
                   value={customNote}
                   onChange={(e) => setCustomNote(e.target.value)}
-                  placeholder="e.g. Wedding date, monogram requirements, gift packaging..."
+                  placeholder="e.g. Wedding date, monogram tag, custom logo request..."
                   className="w-full resize-none border border-border/80 bg-secondary/30 p-2.5 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-terracotta focus:outline-none"
                 />
               </div>
 
               {/* Trust Badge */}
               <div className="rounded-sm border border-maroon/15 bg-sandstone/25 p-3 text-[0.72rem] text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-maroon block">✨ Jaipur Workshop Direct:</span>
-                Hand-printed to order. We accept UPI / Bank Transfer and ship across India &amp; Worldwide.
+                <span className="font-semibold text-maroon block flex items-center gap-1">
+                  <Tag className="h-3.5 w-3.5 text-terracotta" /> Bulk Tier Advantages:
+                </span>
+                10 pcs (5% OFF) · 25 pcs (10% OFF) · 50 pcs (15% OFF) · 100+ pcs (20% OFF). Dispatched from Jaipur workshop.
               </div>
             </div>
           )}
@@ -215,16 +256,24 @@ export function CartDrawer() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>Total Items</span>
-                <span>{totalItems} pcs</span>
+                <span className="font-semibold text-foreground">{totalItems} pcs</span>
               </div>
+              {totalSavings > 0 && (
+                <div className="flex items-center justify-between text-xs text-terracotta font-semibold">
+                  <span className="flex items-center gap-1">
+                    <TrendingDown className="h-3.5 w-3.5" /> Total Bulk Discount
+                  </span>
+                  <span>- ₹{totalSavings.toLocaleString("en-IN")}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-base font-serif text-maroon pt-1 border-t border-border/60">
-                <span className="font-semibold">Estimated Total</span>
+                <span className="font-semibold">Estimated Batch Total</span>
                 <span className="text-xl font-bold">
                   ₹{totalPrice.toLocaleString("en-IN")}
                 </span>
               </div>
               <p className="text-[0.65rem] text-muted-foreground">
-                *Final shipping fee calculated on WhatsApp based on pincode / destination.
+                *Final shipping fee calculated on WhatsApp based on destination pincode / country.
               </p>
             </div>
 

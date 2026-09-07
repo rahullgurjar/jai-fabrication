@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Product } from "./products-data";
+import { Product, calculateTierPrice } from "./products-data";
 
 export interface CartItem {
   product: Product;
@@ -15,6 +15,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  totalSavings: number;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
   generateWhatsAppOrderUrl: (customNote?: string) => string;
@@ -22,7 +23,7 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = "jai_fabrication_bag_v1";
+const CART_STORAGE_KEY = "jai_fabrication_bag_v2";
 export const WA_BASE_PHONE = "919521922366";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -68,8 +69,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { product, quantity }];
     });
 
-    toast.success(`Added "${product.name}" to your Enquiry Bag`, {
-      description: `${quantity} ${quantity === 1 ? "unit" : "units"} in bag`,
+    const tier = calculateTierPrice(product.price, quantity);
+    const discountText = tier.discountPercent > 0 ? ` (${tier.discountPercent}% bulk discount applied)` : "";
+
+    toast.success(`Added ${quantity} pc${quantity > 1 ? "s" : ""} of "${product.name}"${discountText}`, {
       action: {
         label: "View Bag",
         onClick: () => setIsCartOpen(true),
@@ -104,10 +107,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
+  
+  // Calculate total price and savings with bulk tier discounts
+  const totalPrice = items.reduce((sum, item) => {
+    const tier = calculateTierPrice(item.product.price, item.quantity);
+    return sum + tier.totalPrice;
+  }, 0);
+
+  const totalSavings = items.reduce((sum, item) => {
+    const tier = calculateTierPrice(item.product.price, item.quantity);
+    return sum + tier.savings;
+  }, 0);
 
   const generateWhatsAppOrderUrl = (customNote?: string) => {
     if (items.length === 0) {
@@ -123,16 +133,21 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     ];
 
     items.forEach((item, index) => {
-      const lineTotal = item.product.price * item.quantity;
-      lines.push(
-        `${index + 1}. *${item.product.name}*` +
-          `\n   • Quantity: ${item.quantity} pc${item.quantity > 1 ? "s" : ""}` +
-          `\n   • Price: ₹${item.product.price.toLocaleString("en-IN")} each (₹${lineTotal.toLocaleString("en-IN")})`
-      );
+      const tier = calculateTierPrice(item.product.price, item.quantity);
+      let line = `${index + 1}. *${item.product.name}*` +
+        `\n   • Quantity: ${item.quantity} pc${item.quantity > 1 ? "s" : ""}` +
+        `\n   • Unit Rate: ₹${tier.unitPrice.toLocaleString("en-IN")}/pc (Total: ₹${tier.totalPrice.toLocaleString("en-IN")})`;
+      if (tier.discountPercent > 0) {
+        line += `\n   • Bulk Discount: ${tier.discountPercent}% OFF (Saved ₹${tier.savings.toLocaleString("en-IN")})`;
+      }
+      lines.push(line);
     });
 
     lines.push("");
-    lines.push(`🛍️ *Estimated Order Total:* ₹${totalPrice.toLocaleString("en-IN")} (${totalItems} items)`);
+    lines.push(`🛍️ *Estimated Order Total:* ₹${totalPrice.toLocaleString("en-IN")} (${totalItems} items total)`);
+    if (totalSavings > 0) {
+      lines.push(`✨ *Total Bulk Savings:* ₹${totalSavings.toLocaleString("en-IN")}`);
+    }
     lines.push("📍 Delivery Location: Jaipur / Pan-India / International");
     
     if (customNote && customNote.trim()) {
@@ -140,7 +155,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
 
     lines.push("");
-    lines.push("Please confirm availability, dispatched timeline, and payment (UPI/Bank Transfer). Thank you!");
+    lines.push("Please confirm production availability, dispatched timeline, and payment details. Thank you!");
 
     const message = lines.join("\n");
     return `https://wa.me/${WA_BASE_PHONE}?text=${encodeURIComponent(message)}`;
@@ -156,6 +171,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         clearCart,
         totalItems,
         totalPrice,
+        totalSavings,
         isCartOpen,
         setIsCartOpen,
         generateWhatsAppOrderUrl,

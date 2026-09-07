@@ -26,7 +26,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useCart, WA_BASE_PHONE } from "@/lib/cart-context";
-import { PRODUCTS_DATA, CATEGORIES, Product } from "@/lib/products-data";
+import { PRODUCTS_DATA, CATEGORIES, Product, calculateTierPrice } from "@/lib/products-data";
 import { CartDrawer } from "@/components/CartDrawer";
 import { QuickViewModal } from "@/components/QuickViewModal";
 import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
@@ -593,116 +593,11 @@ function Index() {
             ) : (
               <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
                 {filteredProducts.map((p) => (
-                  <li
+                  <ProductCard
                     key={p.id}
-                    className="group flex flex-col justify-between rounded-sm border border-border/70 bg-card p-4 transition-all duration-300 hover:border-terracotta/50 hover:shadow-[var(--shadow-soft)]"
-                  >
-                    <div>
-                      {/* Product Image Frame with Quick View Trigger */}
-                      <div className="relative arch aspect-[4/5] w-full overflow-hidden bg-secondary shadow-[var(--shadow-soft)]">
-                        <AssetImage
-                          src={p.asset}
-                          alt={`${p.name} — handmade block-print cotton bag by Jai Fabrication`}
-                          placeholderLabel={p.placeholder}
-                          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                          className="h-full w-full object-cover"
-                          imgClassName="transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
-                        />
-
-                        {/* Top Badges */}
-                        <div className="absolute top-3 left-3 flex flex-col gap-1">
-                          {p.isBestseller && (
-                            <span className="bg-maroon text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
-                              Bestseller
-                            </span>
-                          )}
-                          {p.isNew && (
-                            <span className="bg-terracotta text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
-                              New
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Hover Overlay with Quick View button */}
-                        <div className="absolute inset-0 bg-maroon/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center p-4">
-                          <button
-                            type="button"
-                            onClick={() => setQuickViewProduct(p)}
-                            className="inline-flex items-center gap-2 bg-ivory px-4 py-2 text-[0.7rem] uppercase tracking-widest text-maroon font-bold shadow-lg transition-transform hover:scale-105"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                            Quick Specs
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Tags */}
-                      <div className="mt-4 flex flex-wrap gap-1.5">
-                        {p.tags.slice(0, 2).map((label) => (
-                          <span
-                            key={label}
-                            className="border border-maroon/25 px-2.5 py-0.5 text-[0.6rem] uppercase tracking-[0.18em] text-maroon/80 font-medium"
-                          >
-                            {label}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Title & Description */}
-                      <h3 className="mt-3 font-serif text-2xl text-maroon font-medium group-hover:text-terracotta transition-colors">
-                        {p.name}
-                      </h3>
-                      <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                        {p.shortDescription}
-                      </p>
-                    </div>
-
-                    <div className="mt-5 pt-4 border-t border-border/60">
-                      <div className="flex items-baseline justify-between">
-                        <div>
-                          <p className="text-lg font-serif font-bold text-foreground">
-                            {p.formattedPrice}
-                          </p>
-                          <p className="text-[0.65rem] text-muted-foreground">
-                            100% Cotton · Jaipur Made
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Dual Action Buttons */}
-                      <div className="mt-4 grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => addToCart(p, 1)}
-                          className="flex items-center justify-center gap-1.5 bg-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-ivory font-semibold transition-colors hover:bg-terracotta"
-                        >
-                          <ShoppingBag className="h-3.5 w-3.5" />
-                          Add to Bag
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setQuickViewProduct(p)}
-                          className="flex items-center justify-center gap-1.5 border border-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-maroon font-semibold transition-colors hover:bg-maroon hover:text-ivory"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          Details
-                        </button>
-                      </div>
-
-                      {/* Quick WhatsApp Inquiry */}
-                      <a
-                        href={wa(
-                          `Hello Jai Fabrication, I would like to enquire about the ${p.name} (${p.formattedPrice}).`
-                        )}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-terracotta"
-                      >
-                        <MessageCircle className="h-3.5 w-3.5 text-terracotta" />
-                        Quick WhatsApp enquiry
-                      </a>
-                    </div>
-                  </li>
+                    product={p}
+                    onOpenQuickView={(prod) => setQuickViewProduct(prod)}
+                  />
                 ))}
               </ul>
             )}
@@ -875,5 +770,166 @@ function Index() {
         </a>
       </div>
     </div>
+  );
+}
+
+function ProductCard({
+  product,
+  onOpenQuickView,
+}: {
+  product: Product;
+  onOpenQuickView: (p: Product) => void;
+}) {
+  const { addToCart } = useCart();
+  const [selectedQty, setSelectedQty] = useState(1);
+  const tier = calculateTierPrice(product.price, selectedQty);
+
+  return (
+    <li className="group flex flex-col justify-between rounded-sm border border-border/70 bg-card p-4 transition-all duration-300 hover:border-terracotta/50 hover:shadow-[var(--shadow-soft)]">
+      <div>
+        {/* Product Image Frame */}
+        <div className="relative arch aspect-[4/5] w-full overflow-hidden bg-secondary shadow-[var(--shadow-soft)]">
+          <AssetImage
+            src={product.asset}
+            alt={`${product.name} — handmade block-print cotton bag by Jai Fabrication`}
+            placeholderLabel={product.placeholder}
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+            className="h-full w-full object-cover"
+            imgClassName="transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+          />
+
+          {/* Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-1">
+            {product.isBestseller && (
+              <span className="bg-maroon text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
+                Bestseller
+              </span>
+            )}
+            {product.isNew && (
+              <span className="bg-terracotta text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
+                New
+              </span>
+            )}
+          </div>
+
+          {/* Hover Overlay with Quick View button */}
+          <div className="absolute inset-0 bg-maroon/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center p-4">
+            <button
+              type="button"
+              onClick={() => onOpenQuickView(product)}
+              className="inline-flex items-center gap-2 bg-ivory px-4 py-2 text-[0.7rem] uppercase tracking-widest text-maroon font-bold shadow-lg transition-transform hover:scale-105"
+            >
+              <Eye className="h-3.5 w-3.5" />
+              Specs &amp; Bulk Tiers
+            </button>
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {product.tags.slice(0, 2).map((label) => (
+            <span
+              key={label}
+              className="border border-maroon/25 px-2.5 py-0.5 text-[0.6rem] uppercase tracking-[0.18em] text-maroon/80 font-medium"
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+
+        {/* Title & Short Description */}
+        <h3 className="mt-3 font-serif text-2xl text-maroon font-medium group-hover:text-terracotta transition-colors">
+          {product.name}
+        </h3>
+        <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
+          {product.shortDescription}
+        </p>
+      </div>
+
+      <div className="mt-5 pt-4 border-t border-border/60 space-y-3">
+        {/* Quick Quantity / Bulk Tier Selector */}
+        <div>
+          <div className="flex items-center justify-between text-[0.65rem] text-muted-foreground mb-1.5">
+            <span className="uppercase tracking-wider font-semibold text-foreground">Choose Quantity:</span>
+            {tier.discountPercent > 0 && (
+              <span className="text-terracotta font-bold">
+                {tier.discountPercent}% Bulk OFF
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-5 gap-1 text-[0.65rem]">
+            {[1, 10, 25, 50, 100].map((q) => {
+              const isSelected = selectedQty === q;
+              return (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => setSelectedQty(q)}
+                  className={`py-1 rounded-xs border text-center transition-all ${
+                    isSelected
+                      ? "bg-maroon text-ivory border-maroon font-bold shadow-xs"
+                      : "bg-secondary/70 border-border text-foreground/80 hover:border-maroon/40"
+                  }`}
+                >
+                  {q} pc{q > 1 ? "s" : ""}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Price display */}
+        <div className="flex items-baseline justify-between pt-0.5">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-serif font-bold text-foreground">
+                ₹{tier.totalPrice.toLocaleString("en-IN")}
+              </span>
+              {selectedQty > 1 && (
+                <span className="text-[0.7rem] text-muted-foreground">
+                  (₹{tier.unitPrice.toLocaleString("en-IN")}/pc)
+                </span>
+              )}
+            </div>
+            <p className="text-[0.62rem] text-muted-foreground">
+              {selectedQty === 1 ? "Single piece sample price" : `Bulk batch of ${selectedQty} pcs`}
+            </p>
+          </div>
+        </div>
+
+        {/* Dual Action Buttons */}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => addToCart(product, selectedQty)}
+            className="flex items-center justify-center gap-1.5 bg-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-ivory font-semibold transition-colors hover:bg-terracotta"
+          >
+            <ShoppingBag className="h-3.5 w-3.5" />
+            Add {selectedQty} pc{selectedQty > 1 ? "s" : ""}
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenQuickView(product)}
+            className="flex items-center justify-center gap-1.5 border border-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-maroon font-semibold transition-colors hover:bg-maroon hover:text-ivory"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            Specs &amp; 100+
+          </button>
+        </div>
+
+        {/* Direct WhatsApp Enquiry */}
+        <a
+          href={wa(
+            `Hello Jai Fabrication, I would like to enquire about ordering ${selectedQty} pc${selectedQty > 1 ? "s" : ""} of the ${product.name} (Total: ₹${tier.totalPrice.toLocaleString("en-IN")}).`
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-terracotta"
+        >
+          <MessageCircle className="h-3.5 w-3.5 text-terracotta" />
+          WhatsApp {selectedQty >= 10 ? "bulk quote" : "enquiry"}
+        </a>
+      </div>
+    </li>
   );
 }
