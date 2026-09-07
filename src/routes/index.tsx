@@ -35,6 +35,7 @@ import { CraftLookbook } from "@/components/CraftLookbook";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ArtisanChatBot } from "@/components/ArtisanChatBot";
 import { CraftVideoShowcase } from "@/components/CraftVideoShowcase";
+import { SlidingHero } from "@/components/SlidingHero";
 
 const WA_BASE = `https://wa.me/${WA_BASE_PHONE}`;
 const wa = (message: string) => `${WA_BASE}?text=${encodeURIComponent(message)}`;
@@ -329,105 +330,8 @@ function Index() {
       </header>
 
       <main id="main">
-        {/* Hero Section */}
-        <section
-          className="relative overflow-hidden"
-          style={{ backgroundImage: "var(--gradient-sandstone)" }}
-          aria-labelledby="hero-title"
-        >
-          <div
-            aria-hidden="true"
-            className="motif-field pointer-events-none absolute inset-0 opacity-35"
-          />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-20">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-maroon/20 bg-background/80 px-3.5 py-1 text-[0.68rem] uppercase tracking-[0.24em] text-maroon font-semibold mb-4 backdrop-blur-xs">
-                <Sparkles className="h-3.5 w-3.5 text-terracotta" />
-                Handcrafted in Jaipur · 100% Pure Cotton
-              </div>
-
-              <h1
-                id="hero-title"
-                className="mt-2 font-serif text-[2.8rem] leading-[1.05] text-maroon sm:text-6xl lg:text-7xl font-medium"
-              >
-                Carry a piece of the Pink City.
-              </h1>
-
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/80 sm:text-lg">
-                Hand-block printed cotton bags with colourful character, made
-                for everyday journeys, conscious luxury, and meaningful gifting.
-                Direct from our artisan printing tables in Jaipur.
-              </p>
-
-              {/* CTAs */}
-              <div className="mt-9 grid gap-3 sm:grid-cols-2 sm:gap-4 max-w-md">
-                <a
-                  href="#shop"
-                  className="inline-flex items-center justify-center gap-2 bg-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-ivory transition-all hover:bg-terracotta shadow-md font-semibold"
-                >
-                  <span>Shop Collection</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-                <a
-                  href="#custom"
-                  className="inline-flex items-center justify-center border border-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-maroon transition-all hover:bg-maroon hover:text-ivory font-semibold"
-                >
-                  Custom &amp; Bulk Orders
-                </a>
-              </div>
-
-              {/* Highlights strip */}
-              <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground font-medium pt-4 border-t border-maroon/15">
-                <span>Wedding Favours</span>
-                <span className="text-terracotta">·</span>
-                <span>Corporate Gifting</span>
-                <span className="text-terracotta">·</span>
-                <span>Custom Prints</span>
-                <span className="text-terracotta">·</span>
-                <span>From 3 Days</span>
-              </div>
-            </div>
-
-            {/* Right Column: Hero Image Frame */}
-            <div className="relative">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-3.5 hidden border border-maroon/25 lg:block"
-                style={{ borderRadius: "14rem 14rem 6px 6px" }}
-              />
-              <div className="relative overflow-hidden arch-soft aspect-[4/5] w-full shadow-[var(--shadow-lift)] bg-secondary">
-                <AssetImage
-                  src={siteAssets.hero}
-                  alt="Colourful Jaipur courtyard with handmade block-print bags"
-                  placeholderLabel="Hero — Jaipur courtyard bag image"
-                  loading="eager"
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                />
-
-                {/* Floating Artisan Badge */}
-                <div className="absolute bottom-5 left-5 right-5 rounded-sm bg-background/90 p-3.5 backdrop-blur-md border border-border/80 shadow-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[0.62rem] uppercase tracking-[0.2em] text-terracotta font-semibold">
-                        Jaipur Atelier
-                      </p>
-                      <p className="font-serif text-sm font-semibold text-maroon">
-                        100% Teak Woodblock Craft
-                      </p>
-                    </div>
-                    <a
-                      href="#lookbook"
-                      className="text-[0.65rem] uppercase tracking-wider text-maroon font-bold underline underline-offset-2 hover:text-terracotta"
-                    >
-                      Lookbook →
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Dynamic Sliding Hero Page with Video Visuals */}
+        <SlidingHero />
 
         {/* Story / Craft Process */}
         <section id="craft" className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
