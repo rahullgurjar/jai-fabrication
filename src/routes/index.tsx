@@ -36,6 +36,7 @@ import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { ArtisanChatBot } from "@/components/ArtisanChatBot";
 import { CraftVideoShowcase } from "@/components/CraftVideoShowcase";
 import { SlidingHero } from "@/components/SlidingHero";
+import { BrandCampaignAd } from "@/components/BrandCampaignAd";
 
 const WA_BASE = `https://wa.me/${WA_BASE_PHONE}`;
 const wa = (message: string) => `${WA_BASE}?text=${encodeURIComponent(message)}`;
@@ -48,6 +49,7 @@ const NAV = [
   { label: "Shop", href: "#shop" },
   { label: "Our Craft", href: "#craft" },
   { label: "Workshop Reels", href: "#craft-videos" },
+  { label: "Campaign Ads", href: "#campaign-ad" },
   { label: "Custom Orders", href: "#custom" },
   { label: "Lookbook", href: "#lookbook" },
   { label: "Reviews", href: "#testimonials" },
@@ -521,6 +523,9 @@ function Index() {
 
         {/* Workshop Video & Motion Visuals Showcase */}
         <CraftVideoShowcase />
+
+        {/* Official Brand Campaign & Video Ads Showcase */}
+        <BrandCampaignAd />
 
         {/* Testimonials & Trust Credentials */}
         <TestimonialsSection />

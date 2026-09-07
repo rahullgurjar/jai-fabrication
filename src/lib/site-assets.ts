@@ -19,6 +19,8 @@ import peachSanganeriYogaMatBagAsset from "@/assets/peach-sanganeri-yoga-mat-bag
 import blueMughalVanityBoxAsset from "@/assets/blue-mughal-vanity-box.jpeg";
 import peachPleatedClutchTrioAsset from "@/assets/peach-pleated-clutch-trio.jpeg";
 import pinkLemonStripeTravelToteAsset from "@/assets/pink-lemon-stripe-travel-tote.jpeg";
+import luxuryCraftVideoAdAsset from "@/assets/luxury-craft-video-ad.jpeg";
+import jaipurReelAdAsset from "@/assets/jaipur-reel-ad.jpeg";
 
 export type AssetBinding = string | null;
 
@@ -41,6 +43,8 @@ export const siteAssets: {
   blueMughalVanityBox: AssetBinding;
   peachPleatedClutchTrio: AssetBinding;
   pinkLemonStripeTravelTote: AssetBinding;
+  luxuryCraftVideoAd: AssetBinding;
+  jaipurReelAd: AssetBinding;
 } = {
   logo: logoAsset,
   hero: heroAsset,
@@ -60,4 +64,6 @@ export const siteAssets: {
   blueMughalVanityBox: blueMughalVanityBoxAsset,
   peachPleatedClutchTrio: peachPleatedClutchTrioAsset,
   pinkLemonStripeTravelTote: pinkLemonStripeTravelToteAsset,
+  luxuryCraftVideoAd: luxuryCraftVideoAdAsset,
+  jaipurReelAd: jaipurReelAdAsset,
 };
