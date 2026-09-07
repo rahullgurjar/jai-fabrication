@@ -1,6 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Menu, X, MessageCircle, Instagram, MapPin, Clock } from "lucide-react";
+import { useState, useMemo } from "react";
+import {
+  Menu,
+  X,
+  MessageCircle,
+  Instagram,
+  MapPin,
+  Clock,
+  ShoppingBag,
+  Search,
+  Eye,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Check,
+  Filter,
+} from "lucide-react";
 
 import { AssetImage } from "@/components/AssetImage";
 import { siteAssets } from "@/lib/site-assets";
@@ -10,78 +25,55 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useCart, WA_BASE_PHONE } from "@/lib/cart-context";
+import { PRODUCTS_DATA, CATEGORIES, Product } from "@/lib/products-data";
+import { CartDrawer } from "@/components/CartDrawer";
+import { QuickViewModal } from "@/components/QuickViewModal";
+import { CustomOrderBuilder } from "@/components/CustomOrderBuilder";
+import { CraftLookbook } from "@/components/CraftLookbook";
+import { TestimonialsSection } from "@/components/TestimonialsSection";
 
-const WA_BASE = "https://wa.me/919521922366";
-
+const WA_BASE = `https://wa.me/${WA_BASE_PHONE}`;
 const wa = (message: string) => `${WA_BASE}?text=${encodeURIComponent(message)}`;
 
 const CUSTOM_WA = wa(
-  "Hello Jai Fabrication, I would like to enquire about custom & bulk orders of handmade block-print bags.",
+  "Hello Jai Fabrication, I would like to enquire about custom & bulk orders of handmade block-print bags."
 );
 
 const NAV = [
   { label: "Shop", href: "#shop" },
   { label: "Our Craft", href: "#craft" },
   { label: "Custom Orders", href: "#custom" },
-  { label: "Journal", href: "#journal" },
+  { label: "Lookbook", href: "#lookbook" },
+  { label: "Reviews", href: "#testimonials" },
+  { label: "FAQ", href: "#faq" },
   { label: "Contact", href: "#contact" },
-];
-
-const PRODUCTS = [
-  {
-    name: "Floral Tote Bag",
-    price: "₹1,199",
-    asset: siteAssets.floralTote,
-    note: "Hand-block floral repeat on structured cotton canvas.",
-    placeholder: "Floral Tote — product image",
-  },
-  {
-    name: "Patchwork Duffle Bag",
-    price: "₹1,499",
-    asset: siteAssets.patchworkDuffle,
-    note: "Pieced block-print panels, roomy weekend silhouette.",
-    placeholder: "Patchwork Duffle — product image",
-  },
-  {
-    name: "Yellow Quilted Pouch",
-    price: "₹699",
-    asset: siteAssets.yellowPouch,
-    note: "Quilted yellow cotton, hand-finished zip pouch.",
-    placeholder: "Yellow Quilted Pouch — product image",
-  },
 ];
 
 const FAQS = [
   {
     q: "Do you ship worldwide?",
-    a: "Yes, shipping details are confirmed on WhatsApp.",
+    a: "Yes! We ship across India (2–5 business days) and internationally to the US, UK, Europe, Australia, and UAE via DHL/FedEx. Shipping rates and delivery timelines are confirmed directly on WhatsApp based on your destination postal code.",
   },
   {
     q: "How do I place an order?",
-    a: "Enquire on WhatsApp; UPI payment is accepted.",
-  },
-  { q: "What fabric do you use?", a: "100% cotton." },
-  { q: "Do you take custom or bulk orders?", a: "Yes." },
-  {
-    q: "What is the production timeline?",
-    a: "A minimum of 3 days, depending on quantity.",
+    a: "You can add items to your Enquiry Bag on this website and click 'Send Order Enquiry on WhatsApp', or message us directly on WhatsApp (+91 9521922366). We confirm availability, take your delivery address, and share payment details (UPI, Google Pay, PhonePe, NEFT/IMPS, or International Wire).",
   },
   {
-    q: "What is your return policy?",
-    a: "Defective items can be reported within 3 days of delivery.",
-  },
-];
-
-const JOURNAL = [
-  {
-    kicker: "Notes from the workshop",
-    title: "The rhythm of the wooden block",
-    body: "Each motif is carved by hand, then pressed in sequence across the cloth — a slight variation in every repeat is the signature of real block printing.",
+    q: "What fabric and dyes do you use?",
+    a: "Every piece is crafted in 100% natural, premium cotton canvas or cotton voile. We use skin-friendly, azo-free pigments and traditional Bagru/Sanganeri natural dyes that age beautifully with care.",
   },
   {
-    kicker: "Colour diary",
-    title: "Why Jaipur wears pink",
-    body: "Sandstone facades, terracotta courtyards and indigo shade. Our palette is lifted straight from the streets around Hawa Sadak.",
+    q: "Do you take custom or bulk orders for weddings and corporate gifting?",
+    a: "Yes, bulk and bespoke orders are our specialty! We offer custom block carving (couple monograms, brand logos, custom florals), personalized colour palettes, custom sizing, and gift packaging. Minimum lead time starts from just 3 days.",
+  },
+  {
+    q: "What is your production timeline?",
+    a: "Ready-stock catalog items are dispatched within 24–48 hours. Custom printed and bulk batches (25–500+ pcs) require a minimum of 3 to 10 working days depending on quantity and block carving complexity.",
+  },
+  {
+    q: "What is your return & exchange policy?",
+    a: "Because our pieces are handmade with artisan care, slight variations in print registration and dye depth are authentic hallmarks of genuine hand block printing. In the rare event of a manufacturing defect or transit damage, please report it on WhatsApp within 3 days of delivery for a swift replacement.",
   },
 ];
 
@@ -92,7 +84,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Shop handmade 100% cotton block-print tote bags, duffle bags and pouches by Jai Fabrication, crafted in Jaipur.",
+          "Shop handmade 100% cotton block-print tote bags, duffle bags, pouches and slings by Jai Fabrication, crafted by master artisans in Jaipur, Rajasthan.",
       },
       {
         property: "og:title",
@@ -101,7 +93,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Shop handmade 100% cotton block-print tote bags, duffle bags and pouches by Jai Fabrication, crafted in Jaipur.",
+          "Discover handmade 100% cotton block-print tote bags, duffles, and vanity pouches crafted in Jaipur. Custom prints, wedding favours, and wholesale orders available.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -115,9 +107,11 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "Jai Fabrication",
+          image: "https://jai-fabrication.lovable.app/favicon.png",
           description:
-            "Handmade 100% cotton block-print tote bags, duffle bags and pouches, crafted in Jaipur.",
+            "Handmade 100% cotton block-print tote bags, duffle bags, slings and pouches, crafted in Jaipur.",
           telephone: "+91 9521922366",
+          priceRange: "₹649 - ₹4,999",
           openingHours: "Mo-Su 10:00-18:00",
           address: {
             "@type": "PostalAddress",
@@ -139,29 +133,29 @@ function Logo() {
   return (
     <a
       href="#top"
-      className="flex min-w-0 items-center gap-3"
+      className="flex min-w-0 items-center gap-3 group"
       aria-label="Jai Fabrication — home"
     >
       {siteAssets.logo ? (
         <img
           src={siteAssets.logo}
           alt="Jai Fabrication logo"
-          className="h-11 w-11 shrink-0 rounded-full object-cover"
+          className="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-maroon/30 transition-transform group-hover:scale-105"
         />
       ) : (
         <span
           aria-hidden="true"
-          className="motif-field grid h-11 w-11 shrink-0 place-items-center rounded-full border border-maroon/25 bg-secondary font-serif text-sm text-maroon"
+          className="motif-field grid h-11 w-11 shrink-0 place-items-center rounded-full border border-maroon/25 bg-secondary font-serif text-sm text-maroon shadow-xs"
         >
           JF
         </span>
       )}
       <span className="min-w-0">
-        <span className="block truncate font-serif text-lg leading-none text-maroon">
+        <span className="block truncate font-serif text-xl leading-none text-maroon font-semibold">
           Jai Fabrication
         </span>
-        <span className="mt-1 block truncate text-[0.6rem] uppercase tracking-[0.24em] text-muted-foreground">
-          Jaipur · Since the block
+        <span className="mt-1 block truncate text-[0.62rem] uppercase tracking-[0.24em] text-muted-foreground font-medium">
+          Jaipur · Hand Block Craft
         </span>
       </span>
     </a>
@@ -170,9 +164,28 @@ function Logo() {
 
 function Index() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+
+  const { totalItems, setIsCartOpen, addToCart } = useCart();
+
+  // Filter products by category and search query
+  const filteredProducts = useMemo(() => {
+    return PRODUCTS_DATA.filter((p) => {
+      const matchesCategory =
+        activeCategory === "all" || p.category === activeCategory;
+      const matchesSearch =
+        searchQuery.trim() === "" ||
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.shortDescription.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
 
   return (
-    <div id="top" className="min-h-screen bg-background">
+    <div id="top" className="min-h-screen bg-background text-foreground selection:bg-terracotta/25">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-maroon focus:px-4 focus:py-2 focus:text-ivory"
@@ -180,40 +193,77 @@ function Index() {
         Skip to content
       </a>
 
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-md">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 lg:px-10">
+      {/* Cart Drawer & Quick View Modal */}
+      <CartDrawer />
+      <QuickViewModal
+        product={quickViewProduct}
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+      />
+
+      {/* Top Banner Notice */}
+      <div className="bg-maroon px-4 py-2 text-center text-[0.68rem] uppercase tracking-[0.22em] text-ivory/95 font-medium border-b border-maroon/30">
+        <span className="hidden sm:inline">🌸 Authentic Jaipur Hand-Block Cotton Bags · </span>
+        <span>Wedding Favours &amp; Corporate Gifting from 3 Days · Pan-India &amp; Worldwide Shipping</span>
+      </div>
+
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-md transition-all shadow-xs">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 lg:px-10">
           <Logo />
-          <div className="flex items-center gap-2">
-            <nav aria-label="Primary" className="hidden lg:block">
-              <ul className="flex items-center gap-8">
-                {NAV.map((item) => (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      className="text-[0.78rem] uppercase tracking-[0.16em] text-foreground/80 transition-colors hover:text-terracotta"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+
+          {/* Desktop Navigation */}
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-7">
+              {NAV.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    className="text-[0.76rem] uppercase tracking-[0.18em] text-foreground/85 transition-colors hover:text-terracotta font-medium"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Header Actions */}
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Bag / Cart Trigger Button */}
+            <button
+              type="button"
+              onClick={() => setIsCartOpen(true)}
+              className="relative flex items-center gap-2 border border-maroon/25 bg-secondary/70 px-3.5 py-2.5 text-[0.72rem] uppercase tracking-[0.16em] text-maroon transition-all hover:bg-maroon hover:text-ivory rounded-sm"
+              aria-label={`Open Enquiry Bag with ${totalItems} items`}
+            >
+              <ShoppingBag className="h-4 w-4" />
+              <span className="hidden sm:inline font-semibold">Enquiry Bag</span>
+              {totalItems > 0 && (
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-terracotta px-1 text-[0.65rem] font-bold text-ivory">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            {/* Direct WhatsApp Action */}
             <a
               href={CUSTOM_WA}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden shrink-0 items-center gap-2 bg-maroon px-5 py-2.5 text-[0.72rem] uppercase tracking-[0.18em] text-ivory transition-colors hover:bg-terracotta sm:inline-flex"
+              className="hidden shrink-0 items-center gap-2 bg-maroon px-4 py-2.5 text-[0.72rem] uppercase tracking-[0.18em] text-ivory transition-colors hover:bg-terracotta sm:inline-flex rounded-sm font-medium"
             >
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              WhatsApp
+              <span>WhatsApp</span>
             </a>
+
+            {/* Mobile Menu Trigger */}
             <button
               type="button"
               onClick={() => setMenuOpen((v) => !v)}
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
-              className="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border text-maroon lg:hidden"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border text-maroon lg:hidden rounded-sm"
             >
               <span className="sr-only">
                 {menuOpen ? "Close menu" : "Open menu"}
@@ -227,30 +277,42 @@ function Index() {
           </div>
         </div>
 
+        {/* Mobile Navigation Dropdown */}
         {menuOpen && (
           <nav
             id="mobile-nav"
             aria-label="Mobile"
-            className="border-t border-border bg-background lg:hidden"
+            className="border-t border-border bg-background lg:hidden shadow-xl"
           >
-            <ul className="mx-auto max-w-7xl px-5 py-3">
+            <ul className="mx-auto max-w-7xl px-5 py-4 space-y-1">
               {NAV.map((item) => (
-                <li key={item.href} className="border-b border-border/60 last:border-0">
+                <li key={item.href} className="border-b border-border/50 last:border-0">
                   <a
                     href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block py-3 text-sm uppercase tracking-[0.16em] text-foreground/85"
+                    className="block py-3 text-sm uppercase tracking-[0.16em] text-foreground/90 font-medium"
                   >
                     {item.label}
                   </a>
                 </li>
               ))}
-              <li className="pt-4">
+              <li className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setIsCartOpen(true);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 border border-maroon bg-secondary/80 py-3 text-xs uppercase tracking-[0.18em] text-maroon font-semibold"
+                >
+                  <ShoppingBag className="h-4 w-4" />
+                  Bag ({totalItems})
+                </button>
                 <a
                   href={CUSTOM_WA}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-maroon px-5 py-3 text-[0.72rem] uppercase tracking-[0.18em] text-ivory"
+                  className="flex-1 inline-flex items-center justify-center gap-2 bg-maroon py-3 text-xs uppercase tracking-[0.18em] text-ivory font-semibold"
                 >
                   <MessageCircle className="h-4 w-4" aria-hidden="true" />
                   WhatsApp
@@ -262,7 +324,7 @@ function Index() {
       </header>
 
       <main id="main">
-        {/* Hero */}
+        {/* Hero Section */}
         <section
           className="relative overflow-hidden"
           style={{ backgroundImage: "var(--gradient-sandstone)" }}
@@ -270,68 +332,104 @@ function Index() {
         >
           <div
             aria-hidden="true"
-            className="motif-field pointer-events-none absolute inset-0 opacity-40"
+            className="motif-field pointer-events-none absolute inset-0 opacity-35"
           />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-24">
-            <div className="max-w-xl">
-              <p className="rule-eyebrow">Handcrafted in Jaipur</p>
+          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-16 pt-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-16 lg:px-10 lg:pb-28 lg:pt-20">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-maroon/20 bg-background/80 px-3.5 py-1 text-[0.68rem] uppercase tracking-[0.24em] text-maroon font-semibold mb-4 backdrop-blur-xs">
+                <Sparkles className="h-3.5 w-3.5 text-terracotta" />
+                Handcrafted in Jaipur · 100% Pure Cotton
+              </div>
+
               <h1
                 id="hero-title"
-                className="mt-5 font-serif text-[2.6rem] leading-[1.05] text-maroon sm:text-6xl lg:text-7xl"
+                className="mt-2 font-serif text-[2.8rem] leading-[1.05] text-maroon sm:text-6xl lg:text-7xl font-medium"
               >
                 Carry a piece of the Pink City.
               </h1>
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-foreground/80 sm:text-lg">
+
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/80 sm:text-lg">
                 Hand-block printed cotton bags with colourful character, made
-                for everyday journeys and meaningful gifting.
+                for everyday journeys, conscious luxury, and meaningful gifting.
+                Direct from our artisan printing tables in Jaipur.
               </p>
 
-              <div className="mt-9 grid gap-3 sm:grid-cols-2 sm:gap-4">
+              {/* CTAs */}
+              <div className="mt-9 grid gap-3 sm:grid-cols-2 sm:gap-4 max-w-md">
                 <a
                   href="#shop"
-                  className="inline-flex items-center justify-center bg-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-ivory transition-colors hover:bg-terracotta"
+                  className="inline-flex items-center justify-center gap-2 bg-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-ivory transition-all hover:bg-terracotta shadow-md font-semibold"
                 >
-                  Shop the Collection
+                  <span>Shop Collection</span>
+                  <ArrowRight className="h-4 w-4" />
                 </a>
                 <a
-                  href={CUSTOM_WA}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center border border-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-maroon transition-colors hover:bg-maroon hover:text-ivory"
+                  href="#custom"
+                  className="inline-flex items-center justify-center border border-maroon px-6 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-maroon transition-all hover:bg-maroon hover:text-ivory font-semibold"
                 >
                   Custom &amp; Bulk Orders
                 </a>
               </div>
 
-              <p className="mt-7 text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground">
-                Wedding favours · Corporate gifting · Custom prints · From 3 days
-              </p>
+              {/* Highlights strip */}
+              <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.72rem] uppercase tracking-[0.16em] text-muted-foreground font-medium pt-4 border-t border-maroon/15">
+                <span>Wedding Favours</span>
+                <span className="text-terracotta">·</span>
+                <span>Corporate Gifting</span>
+                <span className="text-terracotta">·</span>
+                <span>Custom Prints</span>
+                <span className="text-terracotta">·</span>
+                <span>From 3 Days</span>
+              </div>
             </div>
 
+            {/* Right Column: Hero Image Frame */}
             <div className="relative">
               <div
                 aria-hidden="true"
-                className="absolute -inset-3 hidden border border-maroon/20 lg:block"
-                style={{ borderRadius: "14rem 14rem 4px 4px" }}
+                className="absolute -inset-3.5 hidden border border-maroon/25 lg:block"
+                style={{ borderRadius: "14rem 14rem 6px 6px" }}
               />
-              <AssetImage
-                src={siteAssets.hero}
-                alt="Colourful Jaipur courtyard with handmade block-print bags"
-                placeholderLabel="Hero — Jaipur courtyard bag image"
-                loading="eager"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-                className="arch-soft aspect-[4/5] w-full shadow-[var(--shadow-lift)]"
-              />
+              <div className="relative overflow-hidden arch-soft aspect-[4/5] w-full shadow-[var(--shadow-lift)] bg-secondary">
+                <AssetImage
+                  src={siteAssets.hero}
+                  alt="Colourful Jaipur courtyard with handmade block-print bags"
+                  placeholderLabel="Hero — Jaipur courtyard bag image"
+                  loading="eager"
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+
+                {/* Floating Artisan Badge */}
+                <div className="absolute bottom-5 left-5 right-5 rounded-sm bg-background/90 p-3.5 backdrop-blur-md border border-border/80 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[0.62rem] uppercase tracking-[0.2em] text-terracotta font-semibold">
+                        Jaipur Atelier
+                      </p>
+                      <p className="font-serif text-sm font-semibold text-maroon">
+                        100% Teak Woodblock Craft
+                      </p>
+                    </div>
+                    <a
+                      href="#lookbook"
+                      className="text-[0.65rem] uppercase tracking-wider text-maroon font-bold underline underline-offset-2 hover:text-terracotta"
+                    >
+                      Lookbook →
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Story / Craft */}
+        {/* Story / Craft Process */}
         <section id="craft" className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20 lg:items-center">
             <div>
               <p className="rule-eyebrow">The Jai Story</p>
-              <h2 className="mt-5 font-serif text-4xl leading-tight text-maroon sm:text-5xl">
+              <h2 className="mt-4 font-serif text-4xl leading-tight text-maroon sm:text-5xl">
                 Crafted in colour. Rooted in Jaipur.
               </h2>
               <p className="mt-6 max-w-lg text-base leading-relaxed text-foreground/80">
@@ -339,9 +437,31 @@ function Index() {
                 craft traditions, every Jai Fabrication piece is made in 100%
                 cotton with handmade block-print character.
               </p>
+              <div className="mt-8 flex items-center gap-6">
+                <div>
+                  <p className="font-serif text-3xl font-bold text-maroon">5+</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
+                    Generations of Craft
+                  </p>
+                </div>
+                <div className="h-8 w-px bg-border" />
+                <div>
+                  <p className="font-serif text-3xl font-bold text-maroon">100%</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
+                    Natural Pure Cotton
+                  </p>
+                </div>
+                <div className="h-8 w-px bg-border" />
+                <div>
+                  <p className="font-serif text-3xl font-bold text-maroon">0%</p>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mt-0.5">
+                    Machine Synthetics
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <ol className="grid gap-px bg-border sm:grid-cols-2">
+            <ol className="grid gap-px bg-border sm:grid-cols-2 shadow-xs">
               {[
                 {
                   step: "01",
@@ -351,23 +471,23 @@ function Index() {
                 {
                   step: "02",
                   title: "Natural cotton",
-                  body: "Only 100% cotton is prepared, washed and stretched across the printing table.",
+                  body: "Only 100% pure cotton canvas and voile is prepared, washed and stretched across the printing table.",
                 },
                 {
                   step: "03",
                   title: "Printing by hand",
-                  body: "Colour is laid repeat by repeat — the gentle irregularity is the mark of the maker.",
+                  body: "Colour is laid repeat by repeat — the gentle irregularity is the signature mark of the maker.",
                 },
                 {
                   step: "04",
                   title: "Cut, quilt, finish",
-                  body: "Panels are cut, reinforced and stitched in our Hawa Sadak workshop.",
+                  body: "Panels are reinforced, diamond quilted and hand-finished in our Hawa Sadak workshop.",
                 },
               ].map((s) => (
-                <li key={s.step} className="bg-background p-7 lg:p-9">
-                  <span className="font-serif text-2xl text-terracotta">{s.step}</span>
-                  <h3 className="mt-4 text-lg text-maroon">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                <li key={s.step} className="bg-background p-7 lg:p-8 transition-colors hover:bg-sandstone/15">
+                  <span className="font-serif text-2xl text-terracotta font-semibold">{s.step}</span>
+                  <h3 className="mt-3 text-lg font-serif text-maroon font-semibold">{s.title}</h3>
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                     {s.body}
                   </p>
                 </li>
@@ -376,162 +496,232 @@ function Index() {
           </div>
         </section>
 
-        {/* Shop */}
+        {/* Shop Catalog with Filter & Search */}
         <section
           id="shop"
-          className="bg-secondary/45 py-20 lg:py-28"
+          className="bg-secondary/45 py-20 lg:py-28 border-t border-border/70"
           aria-labelledby="shop-title"
         >
           <div className="mx-auto max-w-7xl px-5 lg:px-10">
-            <p className="rule-eyebrow">Shop the Edit</p>
-            <h2
-              id="shop-title"
-              className="mt-4 font-serif text-4xl text-maroon sm:text-5xl"
-            >
-              Made to be carried.
-            </h2>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div>
+                <p className="rule-eyebrow">Shop the Edit</p>
+                <h2
+                  id="shop-title"
+                  className="mt-4 font-serif text-4xl text-maroon sm:text-5xl"
+                >
+                  Made to be carried.
+                </h2>
+                <p className="mt-2 text-sm sm:text-base text-muted-foreground">
+                  Explore our collection of handcrafted 100% cotton bags, duffles, pouches &amp; gifting sets.
+                </p>
+              </div>
 
-            <ul className="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-              {PRODUCTS.map((p) => (
-                <li key={p.name} className="group flex flex-col">
-                  <AssetImage
-                    src={p.asset}
-                    alt={`${p.name} — handmade block-print cotton bag by Jai Fabrication`}
-                    placeholderLabel={p.placeholder}
-                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
-                    className="arch aspect-[4/5] w-full shadow-[var(--shadow-soft)]"
-                    imgClassName="transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
-                  />
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {["100% Cotton", "Handmade"].map((label) => (
-                      <span
-                        key={label}
-                        className="border border-maroon/25 px-3 py-1 text-[0.6rem] uppercase tracking-[0.2em] text-maroon/80"
-                      >
-                        {label}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="mt-4 font-serif text-2xl text-maroon">{p.name}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{p.note}</p>
-                  <p className="mt-3 text-base tracking-wide text-foreground">
-                    {p.price}
-                  </p>
-                  <a
-                    href={wa(
-                      `Hello Jai Fabrication, I would like to enquire about the ${p.name} (${p.price}).`,
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-5 inline-flex w-fit items-center gap-2 border-b border-maroon pb-1 text-[0.72rem] uppercase tracking-[0.18em] text-maroon transition-colors hover:border-terracotta hover:text-terracotta"
+              {/* Search input */}
+              <div className="relative w-full max-w-xs">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search bags, totes, pouches..."
+                  className="w-full rounded-sm border border-border bg-background py-2.5 pl-9 pr-4 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-terracotta focus:outline-none"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                    Enquire on WhatsApp
-                    <span className="sr-only"> about {p.name}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Custom */}
-        <section
-          id="custom"
-          className="relative overflow-hidden py-20 text-ivory lg:py-28"
-          style={{ backgroundImage: "var(--gradient-maroon)" }}
-          aria-labelledby="custom-title"
-        >
-          <div
-            aria-hidden="true"
-            className="motif-field pointer-events-none absolute inset-0 opacity-30"
-          />
-          <div className="relative mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20 lg:px-10">
-            <div>
-              <p className="rule-eyebrow text-ivory/70">Custom &amp; Bulk</p>
-              <h2
-                id="custom-title"
-                className="mt-5 font-serif text-4xl leading-tight sm:text-5xl"
-              >
-                Your motif, your palette, your occasion.
-              </h2>
-              <p className="mt-6 max-w-lg text-base leading-relaxed text-ivory/85">
-                Made to order in Jaipur. Production begins from three days,
-                depending on quantity.
-              </p>
-              <a
-                href={CUSTOM_WA}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-9 inline-flex items-center gap-2 bg-ivory px-7 py-4 text-[0.75rem] uppercase tracking-[0.2em] text-maroon transition-colors hover:bg-sandstone"
-              >
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                Start a custom order on WhatsApp
-              </a>
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
 
-            <ul className="grid gap-px bg-ivory/20 sm:grid-cols-3 lg:grid-cols-1">
-              {[
-                {
-                  title: "Custom prints",
-                  body: "Bespoke blocks and colourways matched to your brand or invitation suite.",
-                },
-                {
-                  title: "Wedding favours",
-                  body: "Pouches and totes for mehendi, welcome hampers and return gifts.",
-                },
-                {
-                  title: "Corporate gifts",
-                  body: "Considered, sustainable cotton gifting at volume, logo printing available.",
-                },
-              ].map((c) => (
-                <li
-                  key={c.title}
-                  className="p-7 lg:p-8"
-                  style={{ backgroundImage: "var(--gradient-maroon)" }}
+            {/* Category Filter Pills */}
+            <div className="mt-8 flex flex-wrap items-center gap-2 overflow-x-auto pb-2">
+              {CATEGORIES.map((cat) => {
+                const isSelected = activeCategory === cat.id;
+                const count =
+                  cat.id === "all"
+                    ? PRODUCTS_DATA.length
+                    : PRODUCTS_DATA.filter((p) => p.category === cat.id).length;
+
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-sm transition-all ${
+                      isSelected
+                        ? "bg-maroon text-ivory shadow-sm"
+                        : "bg-background border border-border text-foreground/80 hover:border-maroon/40 hover:text-maroon"
+                    }`}
+                  >
+                    <span>{cat.label}</span>
+                    <span
+                      className={`text-[0.65rem] px-1.5 py-0.2 rounded-full ${
+                        isSelected ? "bg-ivory/25 text-ivory" : "bg-secondary text-muted-foreground"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Products Grid */}
+            {filteredProducts.length === 0 ? (
+              <div className="mt-16 text-center py-16 bg-background rounded-sm border border-border/70">
+                <p className="font-serif text-2xl text-maroon">No matching creations found</p>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Try clearing your search term or switching categories.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory("all");
+                    setSearchQuery("");
+                  }}
+                  className="mt-6 inline-flex bg-maroon px-5 py-2.5 text-xs uppercase tracking-widest text-ivory font-semibold"
                 >
-                  <h3 className="text-xl">{c.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ivory/80">
-                    {c.body}
-                  </p>
-                </li>
-              ))}
-            </ul>
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <ul className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+                {filteredProducts.map((p) => (
+                  <li
+                    key={p.id}
+                    className="group flex flex-col justify-between rounded-sm border border-border/70 bg-card p-4 transition-all duration-300 hover:border-terracotta/50 hover:shadow-[var(--shadow-soft)]"
+                  >
+                    <div>
+                      {/* Product Image Frame with Quick View Trigger */}
+                      <div className="relative arch aspect-[4/5] w-full overflow-hidden bg-secondary shadow-[var(--shadow-soft)]">
+                        <AssetImage
+                          src={p.asset}
+                          alt={`${p.name} — handmade block-print cotton bag by Jai Fabrication`}
+                          placeholderLabel={p.placeholder}
+                          sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw"
+                          className="h-full w-full object-cover"
+                          imgClassName="transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+                        />
+
+                        {/* Top Badges */}
+                        <div className="absolute top-3 left-3 flex flex-col gap-1">
+                          {p.isBestseller && (
+                            <span className="bg-maroon text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
+                              Bestseller
+                            </span>
+                          )}
+                          {p.isNew && (
+                            <span className="bg-terracotta text-ivory text-[0.62rem] uppercase tracking-widest px-2.5 py-1 font-semibold shadow-sm">
+                              New
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Hover Overlay with Quick View button */}
+                        <div className="absolute inset-0 bg-maroon/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center p-4">
+                          <button
+                            type="button"
+                            onClick={() => setQuickViewProduct(p)}
+                            className="inline-flex items-center gap-2 bg-ivory px-4 py-2 text-[0.7rem] uppercase tracking-widest text-maroon font-bold shadow-lg transition-transform hover:scale-105"
+                          >
+                            <Eye className="h-3.5 w-3.5" />
+                            Quick Specs
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Tags */}
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {p.tags.slice(0, 2).map((label) => (
+                          <span
+                            key={label}
+                            className="border border-maroon/25 px-2.5 py-0.5 text-[0.6rem] uppercase tracking-[0.18em] text-maroon/80 font-medium"
+                          >
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Title & Description */}
+                      <h3 className="mt-3 font-serif text-2xl text-maroon font-medium group-hover:text-terracotta transition-colors">
+                        {p.name}
+                      </h3>
+                      <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {p.shortDescription}
+                      </p>
+                    </div>
+
+                    <div className="mt-5 pt-4 border-t border-border/60">
+                      <div className="flex items-baseline justify-between">
+                        <div>
+                          <p className="text-lg font-serif font-bold text-foreground">
+                            {p.formattedPrice}
+                          </p>
+                          <p className="text-[0.65rem] text-muted-foreground">
+                            100% Cotton · Jaipur Made
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Dual Action Buttons */}
+                      <div className="mt-4 grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => addToCart(p, 1)}
+                          className="flex items-center justify-center gap-1.5 bg-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-ivory font-semibold transition-colors hover:bg-terracotta"
+                        >
+                          <ShoppingBag className="h-3.5 w-3.5" />
+                          Add to Bag
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setQuickViewProduct(p)}
+                          className="flex items-center justify-center gap-1.5 border border-maroon px-3 py-2.5 text-[0.68rem] uppercase tracking-[0.16em] text-maroon font-semibold transition-colors hover:bg-maroon hover:text-ivory"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          Details
+                        </button>
+                      </div>
+
+                      {/* Quick WhatsApp Inquiry */}
+                      <a
+                        href={wa(
+                          `Hello Jai Fabrication, I would like to enquire about the ${p.name} (${p.formattedPrice}).`
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 inline-flex items-center gap-1.5 text-[0.68rem] uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-terracotta"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5 text-terracotta" />
+                        Quick WhatsApp enquiry
+                      </a>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </section>
 
-        {/* Journal */}
-        <section
-          id="journal"
-          className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28"
-          aria-labelledby="journal-title"
-        >
-          <p className="rule-eyebrow">The Journal</p>
-          <h2
-            id="journal-title"
-            className="mt-4 font-serif text-4xl text-maroon sm:text-5xl"
-          >
-            Stories from the printing table.
-          </h2>
-          <ul className="mt-12 grid gap-px bg-border sm:grid-cols-2">
-            {JOURNAL.map((j) => (
-              <li key={j.title} className="bg-background p-8 lg:p-10">
-                <p className="text-[0.65rem] uppercase tracking-[0.22em] text-terracotta">
-                  {j.kicker}
-                </p>
-                <h3 className="mt-4 font-serif text-2xl text-maroon">{j.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                  {j.body}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* Interactive Custom & Bulk Order Inquiry Builder */}
+        <CustomOrderBuilder />
 
-        {/* FAQ */}
+        {/* Craft Lookbook */}
+        <CraftLookbook />
+
+        {/* Testimonials & Trust Credentials */}
+        <TestimonialsSection />
+
+        {/* Frequently Asked Questions */}
         <section
           id="faq"
-          className="bg-secondary/45 py-20 lg:py-28"
+          className="bg-background py-20 lg:py-28 border-t border-border/70"
           aria-labelledby="faq-title"
         >
           <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 lg:px-10">
@@ -539,18 +729,43 @@ function Index() {
               <p className="rule-eyebrow">Good to know</p>
               <h2
                 id="faq-title"
-                className="mt-4 font-serif text-4xl text-maroon sm:text-5xl"
+                className="mt-4 font-serif text-4xl text-maroon sm:text-5xl font-medium"
               >
                 Frequently asked.
               </h2>
+              <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                Everything you need to know about ordering, artisan craftsmanship, wedding favours, and international shipping.
+              </p>
+              <div className="mt-8 rounded-sm bg-sandstone/30 p-5 border border-maroon/15">
+                <p className="font-serif text-lg text-maroon font-semibold">
+                  Need a custom question answered?
+                </p>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  Our Jaipur workshop team is available on WhatsApp daily from 10 AM to 6 PM IST.
+                </p>
+                <a
+                  href={CUSTOM_WA}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center gap-2 bg-maroon px-4 py-2.5 text-xs uppercase tracking-widest text-ivory font-semibold hover:bg-terracotta transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Ask us on WhatsApp
+                </a>
+              </div>
             </div>
-            <Accordion type="single" collapsible className="w-full">
+
+            <Accordion type="single" collapsible className="w-full space-y-2">
               {FAQS.map((f, i) => (
-                <AccordionItem key={f.q} value={`faq-${i}`} className="border-maroon/15">
-                  <AccordionTrigger className="text-left font-serif text-lg text-maroon hover:no-underline">
+                <AccordionItem
+                  key={f.q}
+                  value={`faq-${i}`}
+                  className="border border-border/80 rounded-sm px-4 bg-card"
+                >
+                  <AccordionTrigger className="text-left font-serif text-lg text-maroon hover:no-underline py-4">
                     {f.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                  <AccordionContent className="text-xs sm:text-sm leading-relaxed text-muted-foreground pb-4 pt-1">
                     {f.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -563,19 +778,22 @@ function Index() {
       {/* Footer */}
       <footer
         id="contact"
-        className="border-t border-border bg-background py-16 lg:py-20"
+        className="border-t border-border bg-sandstone/25 py-16 lg:py-20"
       >
         <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-3 lg:px-10">
           <div>
             <Logo />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Handmade 100% cotton block-print totes, duffles and pouches,
-              crafted in Jaipur.
+              Handmade 100% pure cotton block-print tote bags, duffles, vanity pouches, and custom wedding favours, crafted in Jaipur, Rajasthan.
             </p>
+            <div className="mt-6 flex items-center gap-2 text-xs text-terracotta font-semibold">
+              <ShieldCheck className="h-4 w-4" />
+              <span>Authentic Jaipur Artisan Guarantee</span>
+            </div>
           </div>
 
           <address className="not-italic">
-            <h2 className="font-serif text-xl text-maroon">Visit the workshop</h2>
+            <h2 className="font-serif text-2xl text-maroon font-semibold">Visit the workshop</h2>
             <p className="mt-4 flex gap-3 text-sm leading-relaxed text-muted-foreground">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" aria-hidden="true" />
               23, Hawa Sadak Rd, Brij Colony, Hawa Sadak, Ramnagar Extension,
@@ -583,19 +801,19 @@ function Index() {
             </p>
             <p className="mt-3 flex gap-3 text-sm text-muted-foreground">
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-terracotta" aria-hidden="true" />
-              10:00 AM–6:00 PM
+              Monday – Sunday · 10:00 AM – 6:00 PM IST
             </p>
           </address>
 
           <div>
-            <h2 className="font-serif text-xl text-maroon">Get in touch</h2>
+            <h2 className="font-serif text-2xl text-maroon font-semibold">Get in touch</h2>
             <ul className="mt-4 space-y-3 text-sm">
               <li>
                 <a
                   href={CUSTOM_WA}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-3 text-muted-foreground transition-colors hover:text-terracotta"
+                  className="inline-flex items-center gap-3 text-foreground/80 transition-colors hover:text-terracotta font-medium"
                 >
                   <MessageCircle className="h-4 w-4 text-terracotta" aria-hidden="true" />
                   WhatsApp +91 9521922366
@@ -607,36 +825,55 @@ function Index() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow Jai Fabrication on Instagram (opens in a new tab)"
-              className="mt-6 inline-flex items-center gap-3 border border-maroon/25 bg-secondary px-5 py-3 font-medium text-maroon transition-colors hover:bg-terracotta hover:text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terracotta"
+              className="mt-5 inline-flex items-center gap-3 border border-maroon/25 bg-background px-5 py-3 font-semibold text-maroon transition-all hover:bg-maroon hover:text-ivory shadow-xs"
             >
-              <Instagram className="h-5 w-5" aria-hidden="true" />
+              <Instagram className="h-5 w-5 text-terracotta" aria-hidden="true" />
               Follow @jaifabrication
             </a>
-            <p className="mt-6 text-sm text-muted-foreground">
-              Worldwide shipping. Defective items can be reported within 3 days
-              of delivery.
+            <p className="mt-6 text-xs text-muted-foreground">
+              Worldwide shipping via FedEx/DHL. Defective or transit damaged items can be reported within 3 days of delivery.
             </p>
           </div>
         </div>
 
         <div className="mx-auto mt-12 max-w-7xl px-5 lg:px-10">
-          <p className="hairline pt-6 text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground">
-            © {new Date().getFullYear()} Jai Fabrication · Jaipur, Rajasthan
+          <p className="hairline pt-6 text-[0.68rem] uppercase tracking-[0.2em] text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>© {new Date().getFullYear()} Jai Fabrication · Jaipur, Rajasthan, India</span>
+            <span>Handmade with Love &amp; Wooden Blocks</span>
           </p>
         </div>
       </footer>
 
-      {/* Floating WhatsApp */}
-      <a
-        href={CUSTOM_WA}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 bg-maroon px-5 py-4 text-[0.7rem] uppercase tracking-[0.18em] text-ivory shadow-[var(--shadow-lift)] transition-colors hover:bg-terracotta"
-      >
-        <MessageCircle className="h-5 w-5" aria-hidden="true" />
-        <span className="hidden sm:inline">WhatsApp us</span>
-        <span className="sr-only sm:hidden">Chat with Jai Fabrication on WhatsApp</span>
-      </a>
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2.5">
+        {/* Floating Cart Button */}
+        <button
+          type="button"
+          onClick={() => setIsCartOpen(true)}
+          className="relative inline-flex items-center gap-2.5 rounded-full bg-ivory border-2 border-maroon px-4 py-3 text-xs uppercase tracking-[0.16em] text-maroon shadow-xl transition-transform hover:scale-105 font-bold"
+          aria-label="Open Bag"
+        >
+          <ShoppingBag className="h-4 w-4 text-maroon" />
+          <span className="hidden sm:inline">Enquiry Bag</span>
+          {totalItems > 0 && (
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-terracotta text-[0.65rem] font-bold text-ivory">
+              {totalItems}
+            </span>
+          )}
+        </button>
+
+        {/* Floating WhatsApp Button */}
+        <a
+          href={CUSTOM_WA}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2.5 rounded-full bg-maroon px-5 py-3.5 text-xs uppercase tracking-[0.18em] text-ivory shadow-[var(--shadow-lift)] transition-all hover:bg-terracotta hover:scale-105 font-semibold"
+        >
+          <MessageCircle className="h-5 w-5" aria-hidden="true" />
+          <span className="hidden sm:inline">WhatsApp us</span>
+          <span className="sr-only sm:hidden">Chat on WhatsApp</span>
+        </a>
+      </div>
     </div>
   );
 }
