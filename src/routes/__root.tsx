@@ -18,6 +18,7 @@ import { Toaster } from "../components/ui/sonner";
 declare global {
   interface Window {
     dataLayer: any[];
+    gtag?: (...args: any[]) => void;
   }
 }
 
@@ -33,6 +34,13 @@ function GtmRouteTracker() {
         page_location: window.location.href,
         page_title: document.title,
       });
+      if (typeof window.gtag === "function") {
+        window.gtag("config", "G-2EQ421LZ7M", {
+          page_path: pathname,
+          page_location: window.location.href,
+          page_title: document.title,
+        });
+      }
     }
   }, [pathname]);
 
@@ -133,6 +141,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
     scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-2EQ421LZ7M",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-2EQ421LZ7M');`,
+      },
       {
         children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
