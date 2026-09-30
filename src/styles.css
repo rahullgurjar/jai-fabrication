@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Jai Fabrication design system — Jaipur heritage palette.
- * Sandstone pink, terracotta, deep maroon, warm ivory, restrained indigo.
+ * Jai Fabrication design system — Jaipur heritage luxury palette.
+ * Sandstone pink, terracotta, deep royal maroon, warm ivory, restrained indigo, antique brass/gold.
  */
 
 @theme inline {
@@ -56,33 +56,33 @@
 }
 
 :root {
-  --radius: 0.25rem;
+  --radius: 0.35rem;
 
-  --ivory: oklch(0.973 0.014 85);
-  --sandstone: oklch(0.878 0.045 22);
-  --terracotta: oklch(0.585 0.135 36);
-  --maroon: oklch(0.335 0.098 18);
-  --indigo: oklch(0.395 0.083 265);
-  --gold: oklch(0.74 0.093 76);
+  --ivory: oklch(0.978 0.012 85);
+  --sandstone: oklch(0.885 0.042 28);
+  --terracotta: oklch(0.575 0.142 38);
+  --maroon: oklch(0.32 0.095 20);
+  --indigo: oklch(0.385 0.088 260);
+  --gold: oklch(0.76 0.115 78);
 
   --background: var(--ivory);
-  --foreground: oklch(0.26 0.035 25);
-  --card: oklch(0.988 0.008 85);
+  --foreground: oklch(0.24 0.035 25);
+  --card: oklch(0.992 0.006 85);
   --card-foreground: var(--foreground);
-  --popover: oklch(0.988 0.008 85);
+  --popover: oklch(0.992 0.006 85);
   --popover-foreground: var(--foreground);
   --primary: var(--maroon);
-  --primary-foreground: oklch(0.98 0.012 85);
-  --secondary: oklch(0.935 0.028 30);
+  --primary-foreground: oklch(0.985 0.01 85);
+  --secondary: oklch(0.942 0.024 35);
   --secondary-foreground: var(--maroon);
-  --muted: oklch(0.938 0.02 60);
-  --muted-foreground: oklch(0.485 0.032 30);
+  --muted: oklch(0.94 0.018 60);
+  --muted-foreground: oklch(0.46 0.03 30);
   --accent: var(--terracotta);
-  --accent-foreground: oklch(0.98 0.012 85);
+  --accent-foreground: oklch(0.985 0.01 85);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.885 0.028 45);
-  --input: oklch(0.885 0.028 45);
+  --border: oklch(0.89 0.025 45);
+  --input: oklch(0.89 0.025 45);
   --ring: var(--terracotta);
 
   --sidebar: var(--ivory);
@@ -96,16 +96,22 @@
 
   --gradient-sandstone: linear-gradient(
     170deg,
-    color-mix(in oklab, var(--sandstone) 55%, var(--ivory)) 0%,
-    var(--ivory) 60%
+    color-mix(in oklab, var(--sandstone) 45%, var(--ivory)) 0%,
+    var(--ivory) 70%
   );
   --gradient-maroon: linear-gradient(
     135deg,
     var(--maroon) 0%,
-    color-mix(in oklab, var(--terracotta) 65%, var(--maroon)) 100%
+    color-mix(in oklab, var(--terracotta) 60%, var(--maroon)) 100%
   );
-  --shadow-soft: 0 24px 60px -34px color-mix(in oklab, var(--maroon) 55%, transparent);
-  --shadow-lift: 0 34px 80px -38px color-mix(in oklab, var(--maroon) 65%, transparent);
+  --gradient-gold: linear-gradient(
+    135deg,
+    oklch(0.78 0.12 75) 0%,
+    oklch(0.68 0.14 65) 100%
+  );
+  --shadow-soft: 0 16px 40px -20px color-mix(in oklab, var(--maroon) 35%, transparent);
+  --shadow-lift: 0 28px 70px -30px color-mix(in oklab, var(--maroon) 45%, transparent);
+  --shadow-glow: 0 0 25px -5px color-mix(in oklab, var(--terracotta) 30%, transparent);
 }
 
 @layer base {
@@ -118,6 +124,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   h1,
@@ -142,6 +149,22 @@
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--ivory);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--maroon) 35%, transparent);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--terracotta);
+  }
 }
 
 /* Jaipur arch silhouette */
@@ -151,7 +174,7 @@
 }
 
 @utility arch-soft {
-  border-radius: 14rem 14rem 4px 4px;
+  border-radius: 14rem 14rem 6px 6px;
   overflow: hidden;
 }
 
@@ -160,12 +183,12 @@
   background-image:
     radial-gradient(
       circle at center,
-      color-mix(in oklab, var(--terracotta) 22%, transparent) 0 2px,
+      color-mix(in oklab, var(--terracotta) 20%, transparent) 0 2px,
       transparent 2.5px
     ),
     radial-gradient(
       circle at center,
-      color-mix(in oklab, var(--indigo) 16%, transparent) 0 1.5px,
+      color-mix(in oklab, var(--indigo) 14%, transparent) 0 1.5px,
       transparent 2px
     );
   background-size:
@@ -182,10 +205,50 @@
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--terracotta);
+  font-weight: 600;
 }
 
 @utility hairline {
-  border-top: 1px solid color-mix(in oklab, var(--maroon) 18%, transparent);
+  border-top: 1px solid color-mix(in oklab, var(--maroon) 16%, transparent);
+}
+
+@utility glass-panel {
+  background: rgba(255, 252, 248, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklab, var(--maroon) 15%, transparent);
+}
+
+/* Hide scrollbar for clean horizontal carousel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
