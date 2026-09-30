@@ -864,7 +864,18 @@ function AppContent() {
         <div className="mx-auto mt-12 max-w-7xl px-5 lg:px-10">
           <div className="hairline pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.68rem] uppercase tracking-[0.18em] text-muted-foreground font-medium">
             <p>© {new Date().getFullYear()} Jai Fabrication · Jaipur, Rajasthan, India</p>
-            <p>Handmade with Love &amp; Wooden Blocks</p>
+            <div className="flex items-center gap-4">
+              <a
+                href="/sitemap.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-terracotta underline underline-offset-4"
+              >
+                XML Sitemap
+              </a>
+              <span>·</span>
+              <p>Handmade with Love &amp; Wooden Blocks</p>
+            </div>
           </div>
         </div>
       </footer>

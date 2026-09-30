@@ -139,6 +139,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Jost:wght@300;400;500&display=swap",
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "canonical", href: "https://jaifabrication.shop/" },
+      { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
     ],
     scripts: [
       {

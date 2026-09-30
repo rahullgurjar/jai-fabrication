@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://jaifabrication.shop/</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/jaipur-courtyard-hero.jpeg</image:loc>
+      <image:title>Jai Fabrication Jaipur Hand Block Printed Bags</image:title>
+      <image:caption>Authentic 100% cotton hand block print tote bags, duffle bags and pouches crafted in Jaipur</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/jai-fabrication-logo.jpeg</image:loc>
+      <image:title>Jai Fabrication Logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/pink-ruffle-laptop-sleeve.jpeg</image:loc>
+      <image:title>Pink Blossom Ruffled Quilted Laptop Sleeve</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/pink-lemon-stripe-travel-tote.jpeg</image:loc>
+      <image:title>Pink Lemon Stripe Quilted Travel Holdall</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/dusty-rose-floral-duffle.jpeg</image:loc>
+      <image:title>Dusty Rose Floral Quilted Weekend Duffle</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/indigo-floral-duffle.jpeg</image:loc>
+      <image:title>Indigo Sanganeri Quilted Overnight Duffle</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/mughal-botanical-duffle.jpeg</image:loc>
+      <image:title>Mughal Botanical Heritage Duffle Bag</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/boho-patchwork-duffle.jpeg</image:loc>
+      <image:title>Boho Jaipur Patchwork Weekender Duffle</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/lavender-quilted-vanity-pouch.jpeg</image:loc>
+      <image:title>Lavender Bloom Quilted Vanity Pouch</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/lime-floral-quilted-pouch.jpeg</image:loc>
+      <image:title>Lime &amp; Rose Garden Quilted Pouch</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/tropical-safari-yoga-mat-bag.jpeg</image:loc>
+      <image:title>Azure Safari Block-Print Yoga Mat Bag</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/peach-sanganeri-yoga-mat-bag.jpeg</image:loc>
+      <image:title>Peach Sanganeri Floral Yoga Mat Bag</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/pink-stripe-quilted-clutch.jpeg</image:loc>
+      <image:title>Pink Striped Hand-Block Quilted Clutch</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/blue-mughal-vanity-box.jpeg</image:loc>
+      <image:title>Royal Blue Mughal Vanity Case</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/peach-pleated-clutch-trio.jpeg</image:loc>
+      <image:title>Peach Blossom Pleated Clutch Trio Set</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/floral-tote.jpeg</image:loc>
+      <image:title>Jaipur Garden Classic Cotton Canvas Tote</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://jaifabrication.shop/assets/quilted-pouch.jpeg</image:loc>
+      <image:title>Sunlit Marigold Quilted Cosmetic Pouch</image:title>
+    </image:image>
+  </url>
+
+  <!-- Shop Collections Section -->
+  <url>
+    <loc>https://jaifabrication.shop/#shop</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Artisan Craft Section -->
+  <url>
+    <loc>https://jaifabrication.shop/#craft</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Workshop Reels Section -->
+  <url>
+    <loc>https://jaifabrication.shop/#craft-videos</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Campaign Ad Section -->
+  <url>
+    <loc>https://jaifabrication.shop/#campaign-ad</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Custom Orders & Wholesale Bulk Inquiries -->
+  <url>
+    <loc>https://jaifabrication.shop/#custom</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Lookbook Gallery -->
+  <url>
+    <loc>https://jaifabrication.shop/#lookbook</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Customer Reviews & Testimonials -->
+  <url>
+    <loc>https://jaifabrication.shop/#testimonials</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Frequently Asked Questions (FAQ) -->
+  <url>
+    <loc>https://jaifabrication.shop/#faq</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contact & Workshop Location -->
+  <url>
+    <loc>https://jaifabrication.shop/#contact</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

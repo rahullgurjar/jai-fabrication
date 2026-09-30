@@ -12,3 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://jaifabrication.shop/sitemap.xml
+Sitemap: https://www.jaifabrication.shop/sitemap.xml
